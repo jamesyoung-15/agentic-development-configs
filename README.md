@@ -73,6 +73,20 @@ CHANGELOG.md    what changed, per VERSION
 
 `notes/` is never installed into a project. It is the input to deciding what to build next.
 
+## How a project ends up wired
+
+```
+AGENTS.md            under 100 lines: what this is, commands, always-rules, routing table
+  @ imports          eager fragments, in context every turn
+  Where to look      routed fragments and wiki pages, read on demand
+STATE.md             current state, rewritten each checkpoint
+JOURNAL.md           append-only events, where negative results live
+docs/adr/            decisions, written at decision time
+wiki/                things not derivable from any repo, each page dated
+```
+
+Eager costs context on every turn, routed costs one file open when it matters. Default to routed. See `harness/README.md`.
+
 ## What lands where in a project
 
 ```

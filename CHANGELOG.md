@@ -6,6 +6,32 @@ Bump `VERSION` when something installable changes. Changes to `notes/`, `tests/`
 
 ## Unreleased
 
+## 0.2.0 - 2026-10-20
+
+Context management, and a fix to how instructions get wired into `AGENTS.md`.
+
+### Changed
+
+- `install.sh` no longer makes every instruction an eager `@import`. Each instruction declares `<!-- load: eager|routed | when: ... -->` on its first line. Eager becomes an `@import`, routed becomes a row in a `Where to look` table that the agent reads on demand. A fragment with no directive defaults to routed.
+
+  Imports load at session start in both harnesses, so importing everything reproduced the 400-line `AGENTS.md` problem. Listed as a known gap at v0.1.0.
+
+- `install.sh` creates `AGENTS.md` from `templates/agents-md.md` instead of a bare stub, and maintains the two marked sections in it.
+- Template installs keep their subdirectory, so `templates/wiki/page.md` lands at `.agents/templates/wiki/page.md`.
+
+### Added
+
+- `instructions/context.md`, eager. Sub-agent delegation triggers, journal triggers, the rule that planning ends on disk, and when to checkpoint instead of compacting again.
+- `skills/checkpoint`. Writes `STATE.md`, appends to `JOURNAL.md`, flags decisions missing an ADR. Refuses to write a conversation summary, which is what made an earlier MEMORY.md approach useless.
+- `templates/agents-md.md`, a skeleton under 100 lines with a routing table and the install markers.
+- `templates/state.md`, rewritten each checkpoint. `templates/journal.md`, append-only, where negative results accumulate.
+- `templates/wiki/`, with `index.md`, `page.md`, and `log.md`. Adapted from Karpathy's LLM wiki layout. Pages carry a last-verified date, and the test for inclusion is whether an agent could learn it from the code in a minute.
+- `harness/README.md` gains an eager vs lazy loading table.
+
+### Removed
+
+- `handoff` from the "Not built" table, delivered as `checkpoint`.
+
 ## 0.1.0 - 2026-10-19
 
 First version. Replaces the loose files in `drafts/`.

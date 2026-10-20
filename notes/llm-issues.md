@@ -89,11 +89,63 @@ I am junior. There are times I want to be taught rather than handed a result, an
 - Mitigated by: `skills/teach`, new and untested.
 - Watch for: the 800-word answer. The 150-word turn limit is the guard, and it is the rule most likely to be ignored.
 
+## Context
+
+### Compaction loses decisions and dead ends
+
+`partial`
+
+On a long project with a large context window I still hit the limit repeatedly, and every compaction dropped things that mattered. Worst losses, in order: approaches already ruled out, rejected alternatives and why, exact strings like job IDs and error text.
+
+A MEMORY.md the agent updated periodically did not work. It was written reactively, at or near compaction time, so the agent was summarizing a summary and producing compaction notes under a different filename.
+
+- Mitigated by: `instructions/context.md` (write at the moment, not at the limit), `skills/checkpoint`, `templates/state.md` rewritten each time, `templates/journal.md` append-only. The split between rewritten state and appended events is what MEMORY.md was missing.
+- Also: stop defending against compaction and make a fresh session cheap instead. One compaction is fine, checkpoint at the second.
+- Still leaks: nothing enforces the journal triggers. If the agent stops appending, the loss is silent until you need the line that is not there.
+
+### Context spent on things a sub-agent should have read
+
+`partial`
+
+Large tool output, especially automation job output, read straight into the main context when the answer needed was two lines.
+
+- Mitigated by: `instructions/context.md` names the triggers and the exact return format, rather than saying to use sub-agents when appropriate.
+- Still leaks: untested whether a named trigger list actually changes the behavior. Watch for it.
+
+### Planning that never reached disk
+
+`mitigated`
+
+Staying in plan mode for a long stretch, then losing the reasoning at the first compaction.
+
+- Mitigated by: `instructions/context.md`, planning ends by writing the plan file plus an ADR per decision.
+
+## Knowledge
+
+### AGENTS.md carries everything
+
+`mitigated`
+
+A single 100 to 400 line file with coding, git, and response standards, all in context on every turn, most of it irrelevant to the task at hand.
+
+- Mitigated by: the eager and routed split, `templates/agents-md.md`, the routing table keyed on what the agent is doing.
+
+### No wiki
+
+`open`
+
+Things true about work systems and derivable from no repo live only in my head and in whatever conversation happened to cover them.
+
+- Mitigated by: `templates/wiki/`, unused so far.
+- Watch for: pages that restate code, and pages nobody re-verifies. The date header is the guard, and it only works if something checks it.
+
 ## Roadmap
 
 Ordered by what the table above says is weakest.
 
-1. Run `whiteboard-defense` and `teach` against real work. Both untested. Record failures in `tests/README.md`.
-2. Length check in `style-check.sh`, if writing volume keeps leaking past the word and phrase rules.
-3. `debug` skill, if shotgun patching keeps happening.
-4. Nothing else until an issue above goes from `partial` to needing it.
+1. Run `checkpoint` on a real long-running work project. The test is whether a fresh session can continue from `STATE.md` alone.
+2. Start the work wiki. Three pages, hand-written, before automating anything.
+3. Run `whiteboard-defense` and `teach` against real work. Both untested. Record failures in `tests/README.md`.
+4. Length check in `style-check.sh`, if writing volume keeps leaking past the word and phrase rules.
+5. `debug` skill, if shotgun patching keeps happening.
+6. Nothing else until an issue above goes from `partial` to needing it.

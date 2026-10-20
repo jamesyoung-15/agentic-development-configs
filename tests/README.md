@@ -27,6 +27,25 @@ Manual. Each scenario: the setup, what to type, and what a pass looks like. Reco
 - Common failure: the 800-word first turn. If the first reply is a wall of text, the skill failed, regardless of how good the content is.
 - Also check: answer a prediction question wrong on purpose. It should say you are wrong and go back to the step that failed, not restart from the beginning.
 
+## checkpoint
+
+- Setup: a session where something failed and you fixed it, and where you chose between two approaches.
+- Run: invoke the skill.
+- Pass: `JOURNAL.md` gains a `fail` line for the dead end and a `why` line for the choice, `STATE.md` is rewritten in full with a `Next` item specific enough to act on, undocumented decisions are listed.
+- Common failure: `STATE.md` reads as a summary of the conversation rather than a description of where things stand. If it says "we discussed" or "I then", it failed.
+- Also check: exact error strings and job IDs should be copied, not paraphrased.
+- The real test: start a fresh session, read only `STATE.md` and the journal tail, and see whether you can continue without asking a question.
+
+## install (eager vs routed)
+
+```bash
+./scripts/install.sh /tmp/p instructions/python.md instructions/documentation.md
+grep -A3 'install:eager' /tmp/p/AGENTS.md      # expect @.agents/instructions/python.md
+grep -A3 'install:routed' /tmp/p/AGENTS.md     # expect a documentation.md table row
+```
+
+A fragment with no `load:` directive must land as routed, never eager.
+
 ## create-pr
 
 - Setup: a branch with 2 or 3 commits, one of them touching a lockfile.
