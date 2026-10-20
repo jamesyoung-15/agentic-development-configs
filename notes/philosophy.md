@@ -55,6 +55,14 @@ Three skills used weekly beats twelve that rot. `catalog.md` has a "Not built" t
 
 A skill is a prompt, and a prompt cannot be known to work without running it. `tests/` has one scenario per skill, with the failure mode to watch for. Run them after a model change. The expected result is that some of them will have started failing.
 
+### Two platforms, both real
+
+macOS on Apple Silicon at work, Linux and mostly NixOS personally. Windows is never a target.
+
+This is not a portability exercise for its own sake. The work machine is the Mac, so a Linux-only script is a script that does not run where the testing happens. v0.2.0 shipped three GNU-only assumptions and the symlinks landed broken on the first real install.
+
+Rule: a script is Linux-only until it has been run on the Mac. Constraints are listed in the README.
+
 ### Tag what has been used, not what has been written
 
 v0.1.0 and v0.2.0 were both tagged the day they were written, before anything in them had been run on a real project. That is backwards for a repo whose whole content is untested prompts.

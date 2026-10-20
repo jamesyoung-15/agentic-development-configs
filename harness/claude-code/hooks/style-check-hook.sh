@@ -13,10 +13,21 @@ set -uo pipefail
 STYLE_CHECK="${STYLE_CHECK:-$HOME/dev/agentic-development/scripts/style-check.sh}"
 [ -x "$STYLE_CHECK" ] || exit 0
 
+# Neither macOS nor NixOS guarantees python3 or jq on PATH, and a hook that
+# silently does nothing is worse than one that is absent. Fall back to sed.
 payload=$(cat)
-file=$(printf '%s' "$payload" | python3 -c \
-  'import json,sys; d=json.load(sys.stdin); print(d.get("tool_input",{}).get("file_path",""))' \
-  2>/dev/null) || exit 0
+extract() {
+  if command -v jq >/dev/null 2>&1; then
+    printf '%s' "$payload" | jq -r '.tool_input.file_path // empty' 2>/dev/null && return
+  fi
+  if command -v python3 >/dev/null 2>&1; then
+    printf '%s' "$payload" | python3 -c \
+      'import json,sys; print(json.load(sys.stdin).get("tool_input",{}).get("file_path",""))' \
+      2>/dev/null && return
+  fi
+  printf '%s' "$payload" | sed -n 's/.*"file_path"[[:space:]]*:[[:space:]]*"\([^"]*\)".*/\1/p' | head -1
+}
+file=$(extract)
 
 case "$file" in
   *.md|*.markdown) ;;

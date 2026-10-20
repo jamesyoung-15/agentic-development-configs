@@ -38,9 +38,12 @@ Format: `YYYY-MM-DD  item  what happened`
                      (bash 3.2 on macOS). All three now portable.
 ```
 
-Lesson: everything here was written and tested on Linux. Assume any script is
-Linux-only until it has been run on the Mac. The emoji check in
-`style-check.sh` still silently skips there, since BSD grep has no `-P`.
+Lesson: everything here was written and tested on Linux, and the work machine
+is an M4 Mac. Assume any script is Linux-only until it has been run there.
+Constraints are now listed under Platforms in the README.
+
+Still degraded on macOS: the emoji check in `style-check.sh` is skipped, since
+BSD grep has no `-P`. Em dashes, banned words, and banned phrases all work.
 
 ## After two weeks
 
