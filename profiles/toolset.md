@@ -2,15 +2,12 @@
 
 What is installed on my machines. Use these instead of the older equivalents.
 
-<!-- Trim this to what is actually installed. Marked {{?}} is a guess. -->
-
 | Instead of | Use | Notes |
 |---|---|---|
 | `pip`, `venv`, `poetry` | `uv` | `uv run`, `uv add`, `uv sync` |
 | `black`, `flake8`, `isort` | `ruff` | `ruff check --fix`, `ruff format` |
 | `grep -r` | `rg` | respects gitignore |
 | `find` | `fd` | |
-| `cat` | `bat` {{?}} | plain `cat` in scripts |
 | GitHub web UI | `gh` | |
 | GitLab web UI | `glab` | |
 
