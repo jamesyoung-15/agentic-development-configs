@@ -10,8 +10,12 @@ Read these when deciding what to build, change, or delete.
 |---|---|
 | `philosophy.md` | Design rules for this repo and why they are what they are |
 | `llm-issues.md` | Problems I hit with agents, what mitigates each one, what is still open |
+| `testing-log.md` | Current state of real-world testing. Read this first when picking the work back up |
+| `references.md` | Where the ideas came from |
 
 `llm-issues.md` is the input to the roadmap. When an issue there has no mitigation, that is the argument for the next thing to build. When a mitigation stops working after a model change, record it there rather than quietly tolerating it.
+
+As of 2026-10-20, nothing in this repo has been run on a real project. `testing-log.md` says what to watch for and names the gaps that are already known, including that the eager and routed split does not yet work under Opencode.
 
 ## James/Human Read This
 

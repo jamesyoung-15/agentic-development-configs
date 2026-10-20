@@ -55,6 +55,14 @@ Three skills used weekly beats twelve that rot. `catalog.md` has a "Not built" t
 
 A skill is a prompt, and a prompt cannot be known to work without running it. `tests/` has one scenario per skill, with the failure mode to watch for. Run them after a model change. The expected result is that some of them will have started failing.
 
+### Tag what has been used, not what has been written
+
+v0.1.0 and v0.2.0 were both tagged the day they were written, before anything in them had been run on a real project. That is backwards for a repo whose whole content is untested prompts.
+
+Going forward: a version gets tagged after it has survived real work, and the tag message says what it survived. The annotated tag is a good place to record known gaps, which is the one thing v0.1.0 did right.
+
+Nothing needs undoing. The two existing tags are honest about being untested.
+
 ## The mode problem
 
 The thing this repo exists to manage, more than any individual instruction.
