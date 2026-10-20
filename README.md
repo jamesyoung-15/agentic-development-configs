@@ -2,6 +2,8 @@
 
 Agent instructions, skills, and templates I install into projects. Plain markdown, no harness-specific content outside `harness/`.
 
+Note: Very high LLM usage (at least for v0.1.0), most of the files are generated and written by LLM, although down the line I may fine-tune these by hand.
+
 ## Install into a project
 
 ```bash
