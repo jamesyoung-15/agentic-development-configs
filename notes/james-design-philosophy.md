@@ -6,7 +6,7 @@ Quick notes on why things are the way they are in this repo, why certain instruc
 
 ## Purpose
 
-Main goal is to mitigate as many of the issues listed in [llm-issues](./llm-issues-james.md) as I can, try and fit each agent to my workflow preferences as much as possible.
+Main goal is to mitigate as many of the issues listed in [llm-issues](./james-llm-issues.md) as I can, try and fit each agent to my workflow preferences as much as possible.
 
 Beyond that, many instructions/skills should also provide a way to help me retain some level of ownership/understanding to the agent-generated content and provide another way to learn/develop technical + cognitive skills. As a junior, I have many gaps in knowledge where I need to build/develop cognitive and technical skills. Beyond avoiding "brain-rot", I am responsible for whatever gets shipped and any bugs, issues, damages are my fault, not the agent's fault.
 
