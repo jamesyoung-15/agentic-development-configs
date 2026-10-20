@@ -22,8 +22,20 @@ Then propose a short list. Do not install everything. Each item needs a reason t
 - Commit history uses `feat:` prefixes → `git-conventional.md`, otherwise `git-plain.md`.
 - `pyproject.toml` present → `python.md`.
 - The project has a README anyone else reads → `writing-style.md` and `documentation.md`.
+- Long-running work, or a project that will outlive one session → `context.md`, `skills/checkpoint`, `templates/state.md`, `templates/journal.md`.
 
 Ask before installing.
+
+### 2b. Decide eager or routed
+
+Each instruction declares a default on its first line. Check it against this project rather than accepting it.
+
+- `eager` becomes an `@import` and sits in context on every turn of every session. Correct when the fragment applies to more than about half the tasks here, and runs short.
+- `routed` becomes a row in the `Where to look` table and is read only when the task matches.
+
+A Python-only repo should have `python.md` eager. A repo where you touch Python once a month should not. When unsure, choose routed. The cost of a missed read is one extra file open, the cost of a wrong eager import is paid on every turn forever.
+
+Change the directive in the installed copy, not upstream, then re-run the install so `AGENTS.md` matches.
 
 ### 3. Copy
 

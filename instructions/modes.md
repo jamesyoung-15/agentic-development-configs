@@ -1,3 +1,5 @@
+<!-- load: eager | when: Deciding how much to explain -->
+
 # Working Modes
 
 Three modes. Default to `assist` if nothing is declared. Switching mid-session is fine, say which mode you are in when you switch.

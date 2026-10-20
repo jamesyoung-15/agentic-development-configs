@@ -1,3 +1,5 @@
+<!-- load: eager | when: Writing any prose, including chat replies -->
+
 <!-- style-check: skip-file (this file quotes the banned patterns on purpose) -->
 
 # Writing Style

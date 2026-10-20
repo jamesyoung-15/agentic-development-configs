@@ -1,3 +1,5 @@
+<!-- load: routed | when: Writing a README, docs, or a wiki page -->
+
 # Documentation
 
 Follow `writing-style.md` for prose. This file covers structure.

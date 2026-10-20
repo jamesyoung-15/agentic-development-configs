@@ -17,8 +17,14 @@
 #   .agents/skills/<name>/        canonical copies
 #   .claude/skills/<name>         link or copy
 #   .opencode/skill/<name>        link or copy
-#   AGENTS.md                     index, created if missing
+#   .agents/templates/...         canonical copies
+#   AGENTS.md                     from templates/agents-md.md if missing
 #   CLAUDE.md                     symlink to AGENTS.md
+#
+# Each instruction declares how it loads, on its first line:
+#   <!-- load: eager  | when: ... -->   becomes an @import, in context always
+#   <!-- load: routed | when: ... -->   becomes a row in "Where to look"
+# No directive means routed, since eager costs context on every turn.
 #
 # Copies are stamped with a provenance comment so scripts/sync.sh can
 # report drift later. Edit the copies, not this repo.
@@ -98,24 +104,53 @@ for item in "${items[@]}"; do
   else
     base="$(basename "$src")"
     case "$item" in
-      templates/*) dst="$TARGET/.agents/templates/$base"; mkdir -p "$(dirname "$dst")" ;;
+      templates/*) dst="$TARGET/.agents/templates/${item#templates/}"
+                   mkdir -p "$(dirname "$dst")" ;;
       *)           dst="$TARGET/.agents/instructions/$base"
-                   installed_instructions+=(".agents/instructions/$base") ;;
+                   # "<!-- load: eager|routed | when: ... -->" on the first line
+                   d=$(sed -n '1s/^<!-- load: *\([a-z]*\) *| *when: *\(.*[^ ]\) *-->$/\1\t\2/p' "$src")
+                   load=${d%%$'\t'*}; when=${d#*$'\t'}
+                   [ -n "$d" ] || { load=routed; when="(set a load directive in $item)"; }
+                   installed_instructions+=("$load"$'\t'".agents/instructions/$base"$'\t'"$when") ;;
     esac
     stamp_file "$src" "$dst" "$item"
-    echo "file        ${dst#"$TARGET"/}"
+    printf 'file        %s%s\n' "${dst#"$TARGET"/}" "${load:+ [$load]}"
+    unset load when
   fi
 done
 
-# AGENTS.md index
+# AGENTS.md. Eager fragments become @imports, which load every session.
+# Routed fragments become rows the agent reads only when the task matches.
 AG="$TARGET/AGENTS.md"
 if [ ! -e "$AG" ]; then
-  printf '# Agent Instructions\n\n<!-- Project-specific rules go here. -->\n\n## Standards\n\n' > "$AG"
-  echo "created     AGENTS.md"
+  sed "s/{{PROJECT}}/$(basename "$TARGET")/" "$REPO/templates/agents-md.md" > "$AG"
+  echo "created     AGENTS.md from templates/agents-md.md"
 fi
-for rel in ${installed_instructions[@]+"${installed_instructions[@]}"}; do
-  grep -qF "$rel" "$AG" || printf -- '- @%s\n' "$rel" >> "$AG"
+
+insert_after() { # marker, line
+  grep -qF "$2" "$AG" && return 0
+  awk -v marker="$1" -v line="$2" '
+    { print }
+    index($0, marker) { print line }
+  ' "$AG" > "$AG.tmp" && mv "$AG.tmp" "$AG"
+}
+
+missing_marker=0
+for entry in ${installed_instructions[@]+"${installed_instructions[@]}"}; do
+  IFS=$'\t' read -r load rel when <<< "$entry"
+  if [ "$load" = eager ]; then
+    marker="<!-- install:eager -->"; line="@$rel"
+  else
+    marker="<!-- install:routed -->"; line="| $when | \`$rel\` |"
+  fi
+  if grep -qF "$marker" "$AG"; then
+    insert_after "$marker" "$line"
+  else
+    missing_marker=1
+    printf 'warning     no %s in AGENTS.md, add by hand:\n            %s\n' "$marker" "$line" >&2
+  fi
 done
+[ "$missing_marker" -eq 1 ] && echo "            (markers come from templates/agents-md.md)" >&2
 
 # CLAUDE.md -> AGENTS.md
 if [ ! -e "$TARGET/CLAUDE.md" ]; then

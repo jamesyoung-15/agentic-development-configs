@@ -1,3 +1,5 @@
+<!-- load: eager | when: Writing or editing Python -->
+
 # Python Standards
 
 ## Tooling

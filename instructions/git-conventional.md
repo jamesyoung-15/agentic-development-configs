@@ -1,3 +1,5 @@
+<!-- load: eager | when: Committing, branching, or writing a commit message -->
+
 # Git Standards (Conventional Commits)
 
 ## Branches

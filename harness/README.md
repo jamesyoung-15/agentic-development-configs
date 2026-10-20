@@ -2,6 +2,29 @@
 
 Content lives in `instructions/`, `skills/`, and `templates/`, as plain markdown with no harness assumptions. This directory holds the per-harness glue only.
 
+## Eager vs lazy loading
+
+The thing that decides whether a project's agent config works or wastes context.
+
+| Mechanism | Loads | Use for |
+|---|---|---|
+| Body text in `AGENTS.md` | Always | Applies to every task |
+| `@path` import (Claude Code) | Always, inlined at session start | Applies to most tasks here, and short |
+| `instructions` array (Opencode) | Always | Same as above |
+| Skill | On demand, matched against its `description` | A specific kind of task |
+| Path in a routing table | On demand, the agent opens it | Reference material, wiki pages |
+
+Imports are eager in both harnesses. Importing six fragments puts all six in context permanently, which is the 400-line `AGENTS.md` problem with extra steps.
+
+Each instruction in this repo declares its default on line one, and `scripts/install.sh` wires it accordingly:
+
+```
+<!-- load: eager  | when: Writing or editing Python -->
+<!-- load: routed | when: Writing a README, docs, or a wiki page -->
+```
+
+Routing-table rows are phrased as what the agent is **doing**, not what the file is about. Agents match on task, not topic.
+
 ## Claude Code
 
 | What | Where |
