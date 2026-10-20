@@ -1,0 +1,8 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "$comment": "Merge into a project's opencode.json. Paths match what scripts/install.sh creates.",
+  "instructions": [
+    "AGENTS.md",
+    ".agents/instructions/*.md"
+  ]
+}
