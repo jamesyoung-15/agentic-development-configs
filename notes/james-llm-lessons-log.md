@@ -9,6 +9,7 @@ My log of things I learned during my usage of LLM agents in my dev workflows.
 - Avoid super-long bloated `AGENTS.md`, put core commands, rules, instructions in there, reference other docs, instructions, skills so agent can lazy-load them
 - Not every instruction/skill needs to be loaded every session, certain things can be lazy-loaded
 - Be concise in instructions
+- LLMs are not guaranteed to follow/respect `AGENTS.md`, particularly as the context-window gets filled up, it may throw out certain instructions you gave it. I've faced this multiple times with my code comments instructions
 
 ### Context Management
 
