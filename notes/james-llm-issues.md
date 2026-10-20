@@ -1,0 +1,129 @@
+<!-- style-check: skip-file (quotes the banned patterns on purpose) -->
+
+# My LLM Agent Issues
+
+Human written, not for agents!
+
+Status values: `mitigated` (something enforces it), `partial` (helps, still leaks), `open` (no mitigation yet), `accepted` (decided not to fix).
+
+## Background (Skip)
+
+<details>
+    <summary>TLDR - Started heavily integrating AI agents to workflow in mid-2026, hit many pain-points listed in this file. This repo aims to mitigate them.</summary>
+
+    So I started using LLMs in 2025, but overall I didn't use it too much and mainly relied on web chat interface to copy and paste snippets or discuss ideas/plans. This was a terrible and inefficient experience, hence why I didn't bother too much with LLMs at the time.
+
+    At around mid-2026, I've decided to try and integrate LLM agents heavily into my workflow to speed up development. During this timespan, I've mainly used Opencode and Claude Code as my harness with either Anthropic models (work-provided) and dabbled with couple other models (Deepseek, Qwen, GPT 5-6 Luna, etc). I felt (key word being felt) a great deal of productivity boost, but this likely came at the cost of technical debt + cognitive debt as many times I would completely offload my task and understanding to the agent in an effort to close out tasks faster.
+
+    During this period, I've hit a lot of issues and annoyances with "agentic development", tracked with this file. Whether these will be solved with future models/harness updates remains to be seen, so rather than sit and wait I've decided to try and experiment with different skills, instructions, and what not in this repo to see if I can at the very least mitigate these issues.
+</details>
+
+## Issues I Attribute to Agents/LLM Models
+
+These are issues I feel like are "built-in/inherent" to agents/models. I can write all the skills/instructions I want but at the end of the day there's no guarantee it'll fix the issue.
+
+### LLM Writing
+
+#### Volume and narration
+
+`partial`
+
+My biggest fucking gripe with LLM. They love to produce walls of text in their responses, documentation, and whatever they fucking write. Not only is there a shit ton of words, these words often have very little substance in them (or can be written in like 20 words).
+
+Personally, I want to be able to skim the page in ten seconds and decide whether to read it. I prefer bullet points over paragraphs (I know ironic with this file). Commands I can copy. Detail behind a link or a collapsed section if I choose to dig.
+
+Docs that I and many others like: Stripe API, FastAPI, Django, MDN.
+
+- Mitigated by: `instructions/writing-style.md` (structural limits, rewrite pairs), `instructions/documentation.md` (README ordering).
+- Still leaks: length is not mechanically checked. Could add a words-per-section check to `style-check.sh`.
+
+#### Vocabulary and phrasing
+
+`mitigated`
+
+I hate LLMisms and just the vocabulary and prose it chooses. For example:
+
+- Words: load-bearing, seam, genuinely, honestly
+- "That's genuinely x". "Honestly, that's y"
+- Contrastive parallelism: "it's not x, it's y", "the real bottleneck: connections, not CPU". Just say the damn thing.
+- Em dashes and emoji everywhere (less of an issue nowadays).
+- Stroking my ego (I've fell for this many times). They love telling me how smart I am and I feel damn good when it does so. LLMs love my "genuinely impressive intuition"
+
+This can vary between models but overall I'd say most models suffer these on a varying degree.
+
+- Mitigated by: `scripts/style-check.sh` plus the PostToolUse hook. The agent gets its own violations back and fixes them in the same turn, before I see the file.
+- Maintenance: add a pattern to the script and to `instructions/writing-style.md` together, or the agent learns nothing from being blocked.
+
+### Code
+
+#### Code quality
+
+`accepted`
+
+Not a problem I face because I'm a junior, so not something I'm experienced enough to discern. For me, given a linter, tests, and basic standards, agents write better code than I do right now.
+
+#### Comment verbosity
+
+`accepted`
+
+Agents leave five lines of comments where the code is self-documenting. `AGENTS.md` saying "1 to 3 lines" gets ignored until I repeat it in the prompt.
+
+Decided not to chase this. Over-commenting forces me to read the code and edit by hand, which I want to be doing anyway. For agent-driven projects more comments do not hurt.
+
+The part that does matter is accuracy. A stale comment that contradicts the code is worse than no comment. `instructions/python.md` says to delete rather than let one drift.
+
+### Alignment
+
+`partial`
+
+Sometimes a prompt problem, sometimes the agent misreading the problem. Either way I'll give it a prompt and it'll eagerly implement something that I hate afterwards or just is flat out wrong. For the most part, switching between plan/write mode has caught a lot of this issue, but not all.
+
+- Mitigated by: `skills/alignment`. Restate in its own words, tag every assumption, at most three questions, then stop and wait. The stop is the whole mechanism.
+- Still leaks: the skill has to be invoked. Nothing detects that alignment was needed and skipped.
+
+## Issues Caused by Me
+
+These are definitely avoidable problems but requires me to put thought/effort into.
+
+### Mode switching
+
+`partial`
+
+Usually not an agent issue. I switch between wanting the agent to own something completely and wanting to understand every decision, and I do not always notice which one I am in. Drifting from the first into the second is how you ship something you cannot explain.
+
+Honestly a lot of times this is a mental battle. I need to force myself a lot of times to not take the easy route and hand everything off to an agent or at least take the time to try and understand what the agent produced.
+
+- Mitigated by: `instructions/modes.md` makes the choice explicit. `templates/adr.md` captures reasoning at decision time.
+- Still leaks: declaring the mode is manual.
+
+### Whiteboard defense
+
+`partial`
+
+Mitchell Hashimoto's "whiteboard defense", quoted in full in `philosophy.md`. For customer-facing work or work that I care about, I need to be able to explain and defend anything I shipped, even without line-level familiarity.
+
+I've got a lot of PoC/experiments/utility tools that quite frankly speaking who gives a toss about, so not understanding it is fine.
+
+- Mitigated by: `skills/whiteboard-defense` drills me and produces a gap list. `skills/teach` closes the gaps.
+- Still leaks: needs testing against a real change to see whether it leaks answers into its own questions.
+
+### Learning
+
+`open`
+
+I am junior. There are times I want to be taught rather than handed a result, and the default agent behavior is to hand me the result.
+
+- Mitigated by: `skills/teach`, new and untested.
+- Watch for: the 800-word answer. The 150-word turn limit is the guard, and it is the rule most likely to be ignored.
+
+### Context Management
+
+`partial`
+
+So for long-running sessions, I've found that the agent becomes dumber and dumber, particularly after compaction(s). This is expected and my quick solution was writing certain details to disk.
+
+Some things I need to do better:
+
+- Have rules to explicitly launch sub-agents where appropriate
+- Better instructions on updating file on disk for long-running sessions. Currently only use single `MEMORY.md` that I prompt it to update. Could have multiple files (eg. `JOURNAL.md`) and update them on important events (eg. mark down when we pick between two approaches, when assumption is wrong, etc.)
+- After 2-3 compactions, start fresh. I've had a project that had like 5 compactions, it was terrible after the 3rd compaction
