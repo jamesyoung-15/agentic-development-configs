@@ -37,13 +37,13 @@ Dependent on task complexity, token constraints, resource constraints, etc. For 
 
 - Remove stale, inaccurate/wrong docs/code comments. Had issue at work where a bad human-written comment lead the agent astray
 - Add date to journals/logs (if not tracked via git), that way LLM can flag potential stale files to review
-- For docs that will reach other viewers, write/edit by-hand, if I don't enjoy reading AI docs, I shouldn't subjugate other to read them. If the intended audience is just me or the agent, then it's fine to let LLM handle it
+- For docs that will reach other human viewers, write/edit by-hand, if I don't enjoy reading AI docs, I shouldn't subjugate others to read them. If the intended audience is just me or the agent, then it's fine to let LLM fully write them
 
 ### Agent Harness
 
-- Claude Code is locked to Anthropic, so risk of vendor-lock, but is widely-used so many tips/tricks seen online is often Claude-Code related
-- Opencode can work with all APIs, including local models, way more flexibility, less used and in my experience lags a bit behind Claude Code in terms of output quality, but I prefer Opencode long-term to avoid lock-in and to support open source
-- Opencode pre-loads a lot, it'll easily eat up tons of context every new session, a huge issue for local models with smaller context windows
+- Claude Code is locked to Anthropic, so risk of vendor-lock but is widely-used in the industry
+- Opencode can work with all APIs including local models so has way more flexibility but less used by the industry. Also in my experience lags a bit behind Claude Code in terms of output quality, but I prefer Opencode long-term to avoid lock-in and to support open source
+- Claude Code and Opencode pre-loads a lot that will easily eat up tons of context every new session, a huge issue for local/small models with smaller context windows
 - Consider trying Pi for more extensible and light-weight harness, particularly for local models
 
 ## Local LLMs
