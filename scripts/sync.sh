@@ -15,6 +15,15 @@ set -uo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
+# macOS ships BSD tools, so no sha256sum.
+if command -v sha256sum >/dev/null 2>&1; then
+  sha256() { sha256sum "$@"; }
+elif command -v shasum >/dev/null 2>&1; then
+  sha256() { shasum -a 256 "$@"; }
+else
+  echo "need sha256sum or shasum on PATH" >&2; exit 1
+fi
+
 [ $# -ge 1 ] || { echo "usage: scripts/sync.sh <target-dir> [--diff]" >&2; exit 1; }
 TARGET="$(cd "$1" && pwd)" || exit 1
 SHOW_DIFF=${2:-}
@@ -42,8 +51,8 @@ while IFS= read -r f; do
     continue
   fi
 
-  local_sha=$(original "$f" | sha256sum | cut -c1-12)
-  upstream_sha=$(sha256sum "$upstream" | cut -c1-12)
+  local_sha=$(original "$f" | sha256 | cut -c1-12)
+  upstream_sha=$(sha256 "$upstream" | cut -c1-12)
 
   edited_here=0; moved_upstream=0
   [ "$local_sha" != "$installed_sha" ] && edited_here=1

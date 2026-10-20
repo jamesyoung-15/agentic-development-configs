@@ -31,8 +31,16 @@ That last one matters most. The eager and routed split is the main design claim 
 Format: `YYYY-MM-DD  item  what happened`
 
 ```
-2026-10-20  --  starting point, nothing run yet
+2026-10-20  --       starting point, nothing run yet
+2026-10-20  install  macOS: symlinks landed broken. realpath --relative-to is GNU only
+                     and BSD realpath has no equivalent. Fixed with a shell relpath.
+                     Same pass found sha256sum (BSD uses shasum -a 256) and mapfile
+                     (bash 3.2 on macOS). All three now portable.
 ```
+
+Lesson: everything here was written and tested on Linux. Assume any script is
+Linux-only until it has been run on the Mac. The emoji check in
+`style-check.sh` still silently skips there, since BSD grep has no `-P`.
 
 ## After two weeks
 

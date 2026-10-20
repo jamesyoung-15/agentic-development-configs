@@ -52,12 +52,32 @@ items=("${args[@]:1}")
 
 mkdir -p "$TARGET/.agents/instructions" "$TARGET/.agents/skills"
 
+# macOS ships BSD tools, so no sha256sum and no `realpath --relative-to`.
+if command -v sha256sum >/dev/null 2>&1; then
+  sha256() { sha256sum "$@"; }
+elif command -v shasum >/dev/null 2>&1; then
+  sha256() { shasum -a 256 "$@"; }
+else
+  echo "need sha256sum or shasum on PATH" >&2; exit 1
+fi
+
+# Portable `realpath --relative-to=$1 $2`. Both arguments are absolute and
+# share a prefix here, which keeps this simple.
+relpath() { # from-dir to-path
+  local from=${1%/} to=${2%/} up=
+  while [ -n "$from" ] && [ "$to" != "$from" ] && [ "${to#"$from"/}" = "$to" ]; do
+    from=${from%/*}
+    up="../$up"
+  done
+  printf '%s%s\n' "$up" "${to#"$from"/}"
+}
+
 # Insert the provenance comment after YAML frontmatter if present, else at top.
 # The hash is of the upstream file at install time. sync.sh uses it to tell
 # "upstream moved" apart from "I edited this copy".
 stamp_file() { # src dst relpath
   local h
-  h="$(sha256sum "$1" | cut -c1-12)"
+  h="$(sha256 "$1" | cut -c1-12)"
   awk -v line="<!-- from: agentic-development/$3 @ $STAMP sha:$h -->" '
     NR == 1 && $0 == "---" { print; fm = 1; next }
     fm && $0 == "---"      { print; print ""; print line; fm = 0; done = 1; next }
@@ -72,7 +92,8 @@ place() { # canonical-dir name
     mkdir -p "$dest"
     rm -rf "${dest:?}/$name"
     if [ "$MODE" = link ]; then
-      ln -s "$(realpath --relative-to="$dest" "$src")" "$dest/$name"
+      ln -s "$(relpath "$dest" "$src")" "$dest/$name"
+      [ -e "$dest/$name" ] || { echo "broken symlink at $dest/$name, re-run with --copy" >&2; exit 1; }
     else
       cp -r "$src" "$dest/$name"
     fi

@@ -14,14 +14,21 @@ BANNED_PHRASES="it's not just|it is not just|that said,|at the end of the day|it
 EMDASH=$'—'
 ENDASH=$'–'
 
-files=("$@")
-if [ ${#files[@]} -eq 0 ]; then
+# No mapfile or readarray here: macOS ships bash 3.2.
+files=()
+if [ $# -gt 0 ]; then
+  files=("$@")
+else
   if git rev-parse --git-dir >/dev/null 2>&1; then
-    mapfile -t files < <(git ls-files '*.md')
+    list=$(git ls-files '*.md')
   else
-    mapfile -t files < <(find . -name '*.md' -not -path './.git/*')
+    list=$(find . -name '*.md' -not -path './.git/*')
   fi
+  while IFS= read -r line; do
+    [ -n "$line" ] && files[${#files[@]}]="$line"
+  done <<< "$list"
 fi
+[ ${#files[@]} -gt 0 ] || exit 0
 
 has_pcre=0
 echo | grep -qP '' 2>/dev/null && has_pcre=1
@@ -44,7 +51,7 @@ check() { # file, pattern, grep-flags, message
   done < <(prose "$f" | grep $flags -e "$pattern" 2>/dev/null)
 }
 
-for f in "${files[@]}"; do
+for f in ${files[@]+"${files[@]}"}; do
   [ -f "$f" ] || continue
   grep -q 'style-check: skip-file' "$f" 2>/dev/null && continue
 
