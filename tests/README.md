@@ -36,6 +36,26 @@ Manual. Each scenario: the setup, what to type, and what a pass looks like. Reco
 - Also check: exact error strings and job IDs should be copied, not paraphrased.
 - The real test: start a fresh session, read only `STATE.md` and the journal tail, and see whether you can continue without asking a question.
 
+## install: opencode wiring
+
+```bash
+rm -rf /tmp/o && mkdir /tmp/o
+./scripts/install.sh /tmp/o --preset python
+cat /tmp/o/opencode.json      # eager fragments only, no documentation.md
+./scripts/install.sh /tmp/o instructions/documentation.md
+grep -c documentation /tmp/o/opencode.json   # 0, routed stays out
+```
+
+A routed fragment appearing in that array is the failure to watch for: it means the
+eager and routed split has stopped working under Opencode.
+
+Merging must preserve other keys. Put a `model` and an `mcp` block in an existing
+`opencode.json` first and confirm both survive. An `opencode.jsonc` must never be
+edited, only reported.
+
+The real check is on the Mac: start Opencode in a project installed this way and ask
+the agent to quote a rule that only exists in an eager fragment.
+
 ## install: presets, picker, manifest
 
 ```bash

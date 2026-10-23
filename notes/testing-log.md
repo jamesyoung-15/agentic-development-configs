@@ -28,6 +28,24 @@ That last one matters most. The eager and routed split is the main design claim 
 | `writing-style` | Does the banned list hold up without the hook? | Em dashes and the banned vocabulary returning after about 20 turns |
 | `AGENTS.md` size | Does it stay under 100 lines once a real project fills it in? | Project notes growing into a second standards document |
 
+## Resolved
+
+- **2026-10-23, eager fragments never loaded under Opencode.** Found on the Mac
+  against opencode v2.1.4. Skills and their symlinks worked, `--copy` was not needed.
+  The `@import` lines in `AGENTS.md` are Claude Code syntax and Opencode reads them as
+  literal text, so `writing-style.md`, `modes.md`, and `git-plain.md` were silently
+  absent. The repo had documented the gap and never closed it.
+
+  `install.sh` now writes the eager fragments into the `instructions` array of the
+  project's `opencode.json`, one entry each. Routed fragments stay out. It creates the
+  file if missing, merges into an existing one with python3 while preserving other
+  keys, and refuses to touch an `opencode.jsonc` since comments would be lost, printing
+  the lines to add instead.
+
+  **Still unverified:** nobody has confirmed that a project-level `instructions` array
+  actually loads under v2.1.4. The docs say it should. Check this on the Mac before
+  trusting it, by asking the agent to quote a rule that only exists in a fragment.
+
 ## Observations
 
 Format: `YYYY-MM-DD  item  what happened`

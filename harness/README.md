@@ -16,6 +16,8 @@ The thing that decides whether a project's agent config works or wastes context.
 
 Imports are eager in both harnesses. Importing six fragments puts all six in context permanently, which is the 400-line `AGENTS.md` problem with extra steps.
 
+Opencode does not expand `@` lines. It reads `AGENTS.md` itself, but an `@.agents/instructions/python.md` line inside it is literal text, so the fragment never loads. `install.sh` therefore also writes the eager fragments into the `instructions` array of the project's `opencode.json`, listing them one by one. Never glob `.agents/instructions/*.md` there: that pulls in the routed fragments and the split stops meaning anything.
+
 Each instruction in this repo declares its default on line one, and `scripts/install.sh` wires it accordingly:
 
 ```
@@ -39,7 +41,7 @@ Routing-table rows are phrased as what the agent is **doing**, not what the file
 | What | Where |
 |---|---|
 | Project instructions | `AGENTS.md` |
-| Fragment includes | `instructions` array in `opencode.json` |
+| Fragment includes | `instructions` array in `opencode.json`, written by `install.sh` |
 | Skills | `.opencode/skill/<name>/SKILL.md` |
 
 ## Personal globals

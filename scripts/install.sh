@@ -25,6 +25,7 @@
 #   .opencode/skill/<name>        link or copy
 #   .agents/templates/...         canonical copies
 #   .agents/manifest              what this project has installed
+#   opencode.json                 instructions array, eager fragments only
 #   AGENTS.md                     from templates/agents-md.md if missing
 #   CLAUDE.md                     symlink to AGENTS.md
 #
@@ -236,10 +237,12 @@ insert_after() { # marker, line
 }
 
 missing_marker=0
+eager_rels=()
 for entry in ${installed_instructions[@]+"${installed_instructions[@]}"}; do
   IFS=$'\t' read -r load rel when <<< "$entry"
   if [ "$load" = eager ]; then
     marker="<!-- install:eager -->"; line="@$rel"
+    eager_rels+=("$rel")
   else
     marker="<!-- install:routed -->"; line="| $when | \`$rel\` |"
   fi
@@ -251,6 +254,53 @@ for entry in ${installed_instructions[@]+"${installed_instructions[@]}"}; do
   fi
 done
 [ "$missing_marker" -eq 1 ] && echo "            (markers come from templates/agents-md.md)" >&2
+
+# Opencode does not expand the @import lines Claude Code uses, so eager fragments
+# would silently never load. Its equivalent is the instructions array in
+# opencode.json. Routed fragments stay out of it, or the split means nothing.
+# AGENTS.md itself is read automatically, so it is not listed here.
+wire_opencode() {
+  [ ${#eager_rels[@]} -gt 0 ] || return 0
+  local f="$TARGET/opencode.json" i first=1
+
+  if [ -f "$TARGET/opencode.jsonc" ]; then
+    echo "warning     opencode.jsonc present, not editing it (comments). Add to its" >&2
+    echo "            instructions array:" >&2
+    printf '              "%s"\n' "${eager_rels[@]}" >&2
+    return 0
+  fi
+
+  if [ ! -f "$f" ]; then
+    {
+      printf '{\n  "$schema": "https://opencode.ai/config.json",\n  "instructions": [\n'
+      for i in "${eager_rels[@]}"; do
+        [ $first -eq 1 ] && first=0 || printf ',\n'
+        printf '    "%s"' "$i"
+      done
+      printf '\n  ]\n}\n'
+    } > "$f"
+    echo "created     opencode.json, ${#eager_rels[@]} eager instructions"
+    return 0
+  fi
+
+  command -v python3 >/dev/null 2>&1 || {
+    echo "warning     opencode.json exists and python3 is missing, cannot merge." >&2
+    echo "            Add to its instructions array:" >&2
+    printf '              "%s"\n' "${eager_rels[@]}" >&2
+    return 0
+  }
+  python3 - "$f" "${eager_rels[@]}" <<'PYEOF'
+import json, sys, pathlib
+path = pathlib.Path(sys.argv[1])
+doc = json.loads(path.read_text())
+cur = doc.get("instructions", [])
+added = [x for x in sys.argv[2:] if x not in cur]
+doc["instructions"] = cur + added
+path.write_text(json.dumps(doc, indent=2) + "\n")
+print(f"opencode    merged {len(added)} new into opencode.json instructions")
+PYEOF
+}
+wire_opencode
 
 # CLAUDE.md -> AGENTS.md
 if [ ! -e "$TARGET/CLAUDE.md" ]; then

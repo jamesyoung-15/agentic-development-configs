@@ -6,6 +6,16 @@ Bump `VERSION` when something installable changes. Changes to `notes/`, `tests/`
 
 ## Unreleased
 
+## 0.3.1 - 2026-10-23
+
+### Fixed
+
+- Eager instruction fragments never loaded under Opencode. The `@import` lines in `AGENTS.md` are Claude Code syntax, and Opencode reads them as literal text, so the fragments were silently absent. Found on macOS against opencode v2.1.4; skills and their symlinks were fine.
+
+  `install.sh` now also writes the eager fragments into the `instructions` array of the project's `opencode.json`, one entry each. Routed fragments stay out, so the split holds in both harnesses. The file is created if missing, merged with python3 if present so other keys survive, and an `opencode.jsonc` is reported rather than edited since comments would be lost.
+
+- `harness/opencode/opencode.json` globbed `.agents/instructions/*.md`, which would have loaded routed fragments too. It is now reference-only and lists entries explicitly.
+
 ## 0.3.0 - 2026-10-23
 
 ### Added
