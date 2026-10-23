@@ -11,8 +11,8 @@
 ## Commits
 
 - Plain subject lines, no `type:` prefix.
-- Imperative mood, capitalized, no trailing period, under 72 characters.
-- Example: `Add user authentication middleware`
+- Imperative mood, lower-case, no trailing period, under 72 characters.
+- Example: `add user authentication middleware`
 - Body only for changes where the reason is not obvious from the diff. Explain why, not what.
 - At most 3 lines of body. If it needs more, the commit is too big, or the reasoning belongs in an ADR the body can link to.
 - No bullet lists of what changed. The diff already says that.
