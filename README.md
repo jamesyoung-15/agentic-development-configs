@@ -1,4 +1,4 @@
-# Agentic Development
+# Agentic Development Configs
 
 Agent instructions, skills, and templates I install into projects. Mainly targets work and personal projects/tasks, where my work dev machine uses MacOS (Apple Silicon) and my personal dev machines are Linux-based (typically NixOS or Debian-based).
 
@@ -19,7 +19,7 @@ chmod +x scripts/*.sh harness/claude-code/hooks/*.sh
   templates/adr.md
 ```
 
-Then read each installed copy and edit it for that project. The copies are yours. See `catalog.md` for what to install and when.
+Then read each installed copy and edit it for that project. See `catalog.md` for what to install and when.
 
 ## Check for upstream changes
 
@@ -28,7 +28,7 @@ Then read each installed copy and edit it for that project. The copies are yours
 ./scripts/sync.sh ~/code/my-project --diff   # and what changed
 ```
 
-It never overwrites. Local edits are the point, so you decide per file.
+Doesn't overwrite and keeps local edits.
 
 ## Personal globals
 
@@ -38,7 +38,7 @@ Machine-level, every project. Once per harness.
 ./scripts/install-profile.sh all     # or claude-code, or opencode
 ```
 
-Never overwrites. If the global config already exists it prints the line to add. Paths per harness are in `harness/README.md`.
+Doesn't overwrite, if the global config already exists it prints the line to add. Paths per harness are in `harness/README.md`.
 
 ## Style linter
 
@@ -51,7 +51,7 @@ Run by hand. Nothing is wired to it, and no instruction references it, so it is 
 
 Checks em dashes, a short word list, and the sentence shapes in `instructions/writing-style.md`. The rules themselves live in that file and stand on their own.
 
-Deliberately not a hook: a hook works in Claude Code and not in Opencode, which needs a plugin for any event, so enforcement would exist on one machine and not the other. See the enforcement note in `notes/philosophy.md`.
+Currently not used, may experiment with this in future.
 
 ## Layout
 
@@ -67,8 +67,6 @@ notes/          philosophy and open issues, for developing this repo
 catalog.md      what everything is and when to use it
 CHANGELOG.md    what changed, per VERSION
 ```
-
-`notes/` is never installed into a project. It is the input to deciding what to build next.
 
 ## How a project ends up wired
 
