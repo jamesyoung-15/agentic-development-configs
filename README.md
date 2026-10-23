@@ -1,20 +1,8 @@
 # Agentic Development
 
-Agent instructions, skills, and templates I install into projects. Plain markdown, no harness-specific content outside `harness/`.
+Agent instructions, skills, and templates I install into projects. Mainly targets work and personal projects/tasks, where my work dev machine uses MacOS (Apple Silicon) and my personal dev machines are Linux-based (typically NixOS or Debian-based).
 
 Note: Very high LLM usage (at least for v0.1.0), most of the files are generated and written by LLM, although down the line I may fine-tune these by hand.
-
-## Platforms
-
-macOS on Apple Silicon (work) and Linux, mainly NixOS (personal). Windows is not a target and never will be.
-
-That means scripts here target BSD and GNU userland both, and bash 3.2 rather than 4:
-
-- No `realpath --relative-to`, no `sha256sum`, no `mapfile`, no `readarray`, no `sed -i` in place.
-- `#!/usr/bin/env bash`, never `/bin/bash`.
-- Assume `python3` and `jq` may be absent on either platform. Degrade to `sed`, and say so rather than silently doing nothing.
-
-Known degradation on macOS: the emoji check in `style-check.sh` is skipped, since BSD grep has no `-P`. Everything else behaves the same.
 
 ## Install into a project
 
