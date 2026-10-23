@@ -53,8 +53,7 @@ Personal, machine-level, not per-project. `scripts/install-profile.sh <harness>`
 
 | Profile | What |
 |---|---|
-| `james.md` | How to talk to me, where I am, defaults |
-| `toolset.md` | What is installed, what to use instead of what |
+| `james.md` | How to talk to me, where I am, defaults, tools |
 
 ## Not built
 

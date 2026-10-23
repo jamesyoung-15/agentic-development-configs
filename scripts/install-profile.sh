@@ -13,7 +13,7 @@
 set -uo pipefail
 
 REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-PROFILES=("$REPO/profiles/james.md" "$REPO/profiles/toolset.md")
+PROFILES=("$REPO/profiles/james.md")
 
 [ $# -ge 1 ] || { sed -n '2,13p' "$0" | sed 's/^# \?//'; exit 1; }
 
@@ -43,7 +43,9 @@ install_opencode() {
   if [ -e "$f" ]; then
     note "exists, leave it. Opencode has no include syntax, so either paste the"
     note "profile contents in, or list the files in opencode.json:"
-    note "  \"instructions\": [\"${PROFILES[0]}\", \"${PROFILES[1]}\"]"
+    list=""
+    for p in "${PROFILES[@]}"; do list="$list${list:+, }\"$p\""; done
+    note "  \"instructions\": [$list]"
   else
     { for p in "${PROFILES[@]}"; do cat "$p"; echo; done; } > "$f"
     note "created as a copy (no include syntax). Re-run after editing a profile."

@@ -1,5 +1,7 @@
-<!-- Personal and machine-level, not per-project. Install location depends on
-     the harness: see harness/README.md, or run scripts/install-profile.sh. -->
+<!-- Personal and machine-level, not per-project. Installed into a harness
+     global config, so it must stand alone: no paths into any project or into
+     the agentic-development repo, they will not resolve here.
+     Install with the install-profile script in the agentic-development repo. -->
 
 # James
 
@@ -9,7 +11,7 @@
 
 - Short answers. Lead with the conclusion, then the detail if I ask.
 - Bullets over paragraphs. I stop reading walls of text.
-- Follow `instructions/writing-style.md` in everything, including chat.
+- No filler, no narration, no em dashes. Say the thing once, do not say what it is not first. A project may install fuller writing rules, which add detail rather than override this.
 - Tell me when you are unsure or when you did not run something. I would rather hear "untested" than find out later.
 - Do not apologize or praise. Just correct and continue.
 
@@ -22,10 +24,12 @@
 
 ## Defaults
 
-- Mode: `assist` unless I say otherwise. See `instructions/modes.md`.
+- Mode: `assist` unless I say otherwise. Explain non-obvious decisions in one line, stop at choices that are hard to reverse. Projects that install the modes fragment define vibe, assist, and defend in full.
 - Harnesses: Claude Code and Opencode. Pi later. Nothing should depend on one of them.
 - Models: mostly Anthropic, sometimes local. Instructions should not assume a model.
 
-## My tools
+## Tools
 
-See `profiles/toolset.md`.
+- Python: `uv` for packages and venvs, `ruff` for lint and format. Never `pip install` into a global env, never `black` or `flake8`.
+- Do not install anything globally without asking.
+- If a tool you expected is missing, say so rather than quietly falling back to something else.
