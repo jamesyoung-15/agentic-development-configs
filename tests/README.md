@@ -68,10 +68,18 @@ A fragment with no `load:` directive must land as routed, never eager.
 
 ## style-check
 
+Manual tool, not wired to anything. Run it after editing the pattern list.
+
 ```bash
-printf 'This is genuinely a load-bearing seam, it is not just config.\n' > /tmp/t.md
-./scripts/style-check.sh /tmp/t.md   # expect 4 violations, exit 1
+printf 'This is genuinely load-bearing.\n\nAnd the fix? More of it.\n\nIt is not a bug, it is a feature.\n' > /tmp/t.md
+./scripts/style-check.sh /tmp/t.md   # expect 3 violations, exit 1
 ```
+
+The pattern list is the part that rots. After changing it, check both directions:
+a file containing each banned shape must flag every one, and a file of similar
+but legitimate sentences (`Report findings, do not fix them`) must stay silent.
+False positives cost more than misses here, since the fix is to rewrite prose
+that was fine.
 
 ## Results
 

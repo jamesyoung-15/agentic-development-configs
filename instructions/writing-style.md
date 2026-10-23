@@ -17,24 +17,63 @@ Applies to all prose you produce: READMEs, docs, PR descriptions, commit bodies,
 
 ## Banned
 
-Never use these. They are checked by `scripts/style-check.sh`.
+Never use these. Nothing checks them automatically, so this is on you.
 
 - Em dashes. Use a comma, a colon, parentheses, or two sentences.
-- Emoji, anywhere, including headings and bullet markers.
-- Words: load-bearing, seam, genuinely, crucial, delve, robust, leverage (as a verb), elegant, powerful, seamless, journey.
-- Phrases: "it's not just X, it's Y", "that said", "at the end of the day", "it's worth noting", "in today's world", "let's dive in".
+- Emoji, anywhere, including headings, bullet markers, and commit messages.
+- Words: load-bearing, seam, genuinely, delve, powerful, seamless, elegant, kicker, fluff.
+- The sentence shapes below. These matter more than the word list.
+
+## Sentence shapes
+
+The vocabulary is a small problem. These structures are the thing that makes writing read as machine-generated, and each one is padding wrapped around a single fact. Write the fact.
+
+**Contrastive parallelism.** Saying what a thing is not, then what it is.
+
+```
+Bad:  It's not a config change, it's an architecture change.
+Bad:  That's not caching, that's a memory leak.
+Bad:  This isn't a small tweak, it's a rewrite.
+Bad:  The real bottleneck: connections, not CPU.
+Good: This changes the architecture.
+Good: That is a memory leak.
+Good: Connections are the bottleneck.
+```
+
+Plain clarification is fine, so `Report findings, do not fix them` and `comments explain why, not what` both stay. The banned shape repeats the subject to manufacture a reveal.
+
+**The build-up triad.** Two negatives then the payoff.
+
+```
+Bad:  No config, no setup, just run it.
+Good: Run it. There is nothing to configure.
+```
+
+**Rhetorical question you then answer.** Delete the question, keep the answer.
+
+```
+Bad:  And the fix? Better briefs. 
+Bad:  But why does this matter? Because it compounds.
+Bad:  And honestly? That's the whole problem.
+Good: The fix is better briefs.
+Good: This matters because it compounds.
+```
+
+**Not X. But Y.** The setup sentence carries nothing.
+
+```
+Bad:  Not because the code is slow. But because the queue is full.
+Good: The queue is full.
+```
+
+**Staccato triples.** Two-word sentences in a row, for rhythm.
+
+```
+Bad:  Fewer questions. Less confusion. Better engagement.
+Good: Fewer questions means less confusion.
+```
 
 ## Rewrites
-
-Contrastive parallelism. Say the thing once.
-
-```
-Bad:  The real bottleneck: connections, not CPU.
-Good: Connections are the bottleneck.
-
-Bad:  This isn't a config change, it's an architecture change.
-Good: This changes the architecture.
-```
 
 Filler vocabulary.
 

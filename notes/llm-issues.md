@@ -17,21 +17,23 @@ Agents produce walls of text with little in them. Long preambles, restatements o
 What I want instead: skim the page in ten seconds, decide whether to read it. Bullets. Commands I can copy. Detail behind a link or a collapsed section if I choose to dig. Docs that do this well: Stripe API, FastAPI, Django, MDN.
 
 - Mitigated by: `instructions/writing-style.md` (structural limits, rewrite pairs), `instructions/documentation.md` (README ordering).
-- Still leaks: length is not mechanically checked. Could add a words-per-section check to `style-check.sh`.
+- Still leaks: nothing is mechanically checked. Whether the instruction holds on its own is the open question.
 
 ### Vocabulary and phrasing
 
-`mitigated`
+`partial`
 
 Specific patterns that make text harder to read:
 
-- Words: load-bearing, seam, genuinely, crucial, delve, robust, seamless, elegant, leverage.
+- Words: load-bearing, seam, genuinely, delve, powerful, seamless, elegant. Ordinary words like leverage, robust, and crucial are fine, I say them too.
 - "That's genuinely x".
 - Contrastive parallelism: "it's not x, it's y", "the real bottleneck: connections, not CPU". Say the thing once.
-- Em dashes and emoji everywhere.
+- Em dashes everywhere.
+- Emoji everywhere, though this was mostly a 2024 problem and current models rarely do it unprompted.
 
-- Mitigated by: `scripts/style-check.sh` plus the PostToolUse hook. The agent gets its own violations back and fixes them in the same turn, before I see the file.
-- Maintenance: add a pattern to the script and to `instructions/writing-style.md` together, or the agent learns nothing from being blocked.
+- Mitigated by: `instructions/writing-style.md`, as bad and good pairs for each sentence shape. Nothing enforces it. `scripts/style-check.sh` exists and is run by hand, not wired to any hook. See the enforcement note in `philosophy.md`.
+- The sentence shapes matter more than the vocabulary. Those are the structures that read as machine-written: contrastive parallelism, the build-up triad, a rhetorical question you then answer, "Not X. But Y.", staccato triples.
+- Maintenance: if a pattern is added to the script, add it to `instructions/writing-style.md` as a bad and good pair too. The instruction is what the agent reads.
 
 ## Code
 

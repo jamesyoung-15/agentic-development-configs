@@ -1,5 +1,7 @@
 #!/usr/bin/env bash
-# Flag banned style patterns in markdown prose.
+# Flag banned style patterns in markdown prose: em dashes, banned words and
+# phrases, and the sentence shapes in SENTENCE_PATTERNS. Everything else in
+# writing-style.md is a rule, not a check.
 # Usage: scripts/style-check.sh FILE [FILE...]
 #        scripts/style-check.sh                 (all tracked *.md)
 #
@@ -9,10 +11,37 @@
 
 set -uo pipefail
 
-BANNED_WORDS='load-bearing|load bearing|seams?\b|genuinely|crucial|delve|robust|seamless(ly)?|elegant|leverages?\b|leveraging'
-BANNED_PHRASES="it's not just|it is not just|that said,|at the end of the day|it's worth noting|it is worth noting|in today's world|let's dive in|dive into|game.?changer"
+BANNED_WORDS='load-bearing|load bearing|seams?\b|genuinely|delve|powerful|seamless(ly)?|elegant|kicker|fluff'
+BANNED_PHRASES="it's not just|it is not just|at the end of the day|in today's world|game.?changer"
 EMDASH=$'—'
 ENDASH=$'–'
+
+# Sentence shapes. Matched per line, so a shape split across a wrapped line is
+# missed. That is deliberate: joining paragraphs merged unrelated list items and
+# reported the wrong line. Prefer a miss to a false positive, since a false hit
+# makes the agent rewrite prose that was fine.
+# Format: label|extended-regex, matched case-insensitively.
+SENTENCE_PATTERNS='
+contrast|(it'\''?s|that'\''?s|this is|that is|it is|these are|they'\''?re|we'\''?re|you'\''?re) not [^,.;:!?]{2,50}, ?(it'\''?s|that'\''?s|this is|that is|it is|these are|they'\''?re|we'\''?re|you'\''?re|just|but)
+contrast|(isn'\''?t|aren'\''?t|wasn'\''?t|weren'\''?t) [^,.;:!?]{2,50}, ?(it'\''?s|that'\''?s|this is|that is|it is|just|but)
+contrast|: [a-z][a-z ]{2,30}, ?not [a-z]{3,}[.!?]
+triad|\bno [^,.;:!?]{2,35}[,.] ?no [^,.;:!?]{2,35}[,.] ?(just|only|simply)
+rhetorical|(^|[.!?] ?)(and|but|so) (the|that|what|why|who|where|how) [^.?!]{0,45}\?
+rhetorical|(^|[.!?] ?)(and|but|so) (honestly|genuinely|really|truly|seriously|frankly)[,?]
+notbut|\bnot because [^.!?]{2,60}[.!?] ?but because\b
+notbut|(^|[.!?] ?)not [^.!?]{2,60}[.!?] ?but [^.!?]{2,60}[.!?]
+staccato|(^|[.!?] )[A-Za-z]+ [A-Za-z]+\. [A-Za-z]+ [A-Za-z]+\. [A-Za-z]+ [A-Za-z]+[.!?]
+'
+
+describe() { # label -> what to do about it
+  case $1 in
+    contrast)   echo "contrastive parallelism (\"not X, it's Y\"). Say the thing once." ;;
+    triad)      echo "\"no X, no Y, just Z\". Drop the build-up, state what it is." ;;
+    rhetorical) echo "rhetorical question you then answer. Delete the question." ;;
+    notbut)     echo "\"Not X. But Y.\" Keep Y, drop the setup." ;;
+    staccato)   echo "three two-word sentences in a row. Write one normal sentence." ;;
+  esac
+}
 
 # No mapfile or readarray here: macOS ships bash 3.2.
 files=()
@@ -29,11 +58,6 @@ else
   done <<< "$list"
 fi
 [ ${#files[@]} -gt 0 ] || exit 0
-
-has_pcre=0
-echo | grep -qP '' 2>/dev/null && has_pcre=1
-# Arrows (U+2190-U+21FF, U+2192) are allowed, they are useful in tables.
-EMOJI='[\x{1F000}-\x{1FAFF}\x{2600}-\x{27BF}\x{2B00}-\x{2BFF}\x{FE0F}]'
 
 violations=0
 
@@ -59,7 +83,25 @@ for f in ${files[@]+"${files[@]}"}; do
   check "$f" "$ENDASH" "-F"  "en dash. Use a hyphen or rewrite the range."
   check "$f" "$BANNED_WORDS"   "-iE" "banned word. See instructions/writing-style.md"
   check "$f" "$BANNED_PHRASES" "-iE" "banned phrase. See instructions/writing-style.md"
-  [ "$has_pcre" -eq 1 ] && check "$f" "$EMOJI" "-P" "emoji. Remove it."
+
+  # Grep the text with no line-number prefix, so patterns can anchor on ^,
+  # then map the match back to its real line.
+  joined=$(prose "$f")
+  [ -n "$joined" ] || continue
+  nums=$(printf '%s\n' "$joined" | cut -d: -f1)
+  texts=$(printf '%s\n' "$joined" | cut -d: -f2-)
+
+  # Several patterns share a label, so report each shape once per line.
+  seen=""
+  while IFS='|' read -r label pattern; do
+    [ -n "$label" ] || continue
+    while IFS= read -r k; do
+      case "$seen" in *"[$k/$label]"*) continue ;; esac
+      seen="$seen[$k/$label]"
+      printf '%s:%s: %s\n' "$f" "$(printf '%s\n' "$nums" | sed -n "${k}p")" "$(describe "$label")"
+      violations=$((violations + 1))
+    done < <(printf '%s\n' "$texts" | grep -niE -e "$pattern" 2>/dev/null | cut -d: -f1)
+  done <<< "$SENTENCE_PATTERNS"
 done
 
 if [ "$violations" -gt 0 ]; then
