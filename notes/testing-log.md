@@ -8,7 +8,9 @@ Record observations here as they happen, one line each. Detail goes in `llm-issu
 
 Work is mostly Opencode, so these are untested there specifically:
 
-- **The style-check hook does not run.** It is a Claude Code `PostToolUse` hook. In Opencode the linter is manual: `scripts/style-check.sh <file>`. If prose quality is noticeably worse at work than at home, this is why, and the fix is an Opencode plugin rather than a better instruction.
+- **Nothing enforces the writing style.** The hook was removed on 2026-10-21. Enforcement would have been Claude Code only, since Opencode needs a TypeScript plugin for any event, so it would have existed at home and not at work. `scripts/style-check.sh` still exists and runs by hand.
+
+  This makes the two weeks a clean test of the instruction on its own. If prose stays acceptable, the instruction is enough and the linter stays manual. If it drifts after twenty turns, that is the argument for wiring both harnesses up at once: a Claude Code hook plus a plugin in `~/.config/opencode/plugins/`, which is global and covers every project.
 - **Skill discovery through symlinks is unverified.** `install.sh` links `.opencode/skill/<name>` to `.agents/skills/<name>`. If Opencode does not pick skills up, re-run with `--copy` and record that here.
 - **`@import` syntax is Claude Code only.** Eager fragments in `AGENTS.md` need the `instructions` array in `opencode.json` instead. `harness/opencode/opencode.json` covers `.agents/instructions/*.md` with a glob, so eager and routed are not actually distinguished under Opencode yet. This is a real gap, not a detail.
 
@@ -42,8 +44,6 @@ Lesson: everything here was written and tested on Linux, and the work machine
 is an M4 Mac. Assume any script is Linux-only until it has been run there.
 Constraints are now listed under Platforms in the README.
 
-Still degraded on macOS: the emoji check in `style-check.sh` is skipped, since
-BSD grep has no `-P`. Em dashes, banned words, and banned phrases all work.
 
 ## After two weeks
 

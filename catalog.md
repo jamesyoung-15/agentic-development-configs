@@ -13,7 +13,7 @@ Drop-in markdown fragments. Installed to `.agents/instructions/` and wired into 
 | `python.md` | eager | The project is Python |
 | `git-conventional.md` | eager | Repo history uses `feat:` / `fix:` prefixes |
 | `git-plain.md` | eager | Repo history uses plain subject lines. Pick one of the two, never both |
-| `writing-style.md` | eager | Anyone other than you reads the output. Pair with the style-check hook |
+| `writing-style.md` | eager | Anyone other than you reads the output |
 | `documentation.md` | routed | The project has a README or docs that are maintained |
 | `modes.md` | eager | You want vibe / assist / defend to be explicit |
 | `context.md` | eager | Any project that outlives one session. Sub-agent and journal rules |

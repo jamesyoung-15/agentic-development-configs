@@ -32,7 +32,7 @@ Routing-table rows are phrased as what the agent is **doing**, not what the file
 | Project instructions | `CLAUDE.md`, symlinked to `AGENTS.md` |
 | Fragment includes | `@.agents/instructions/foo.md` lines inside `AGENTS.md` |
 | Skills | `.claude/skills/<name>/SKILL.md` |
-| Settings and hooks | `.claude/settings.json`, see `claude-code/settings.json` |
+| Settings | `.claude/settings.json`, see `claude-code/settings.json` |
 
 ## Opencode
 

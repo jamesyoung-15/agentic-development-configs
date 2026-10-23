@@ -54,19 +54,16 @@ Never overwrites. If the global config already exists it prints the line to add.
 
 ## Style linter
 
+Run by hand. Nothing is wired to it, and no instruction references it, so it is not something a project needs to carry.
+
 ```bash
 ./scripts/style-check.sh                    # all tracked markdown
 ./scripts/style-check.sh path/to/file.md
 ```
 
-Wire it as a Claude Code hook so the agent fixes its own prose instead of you catching it at review:
+Checks em dashes, a short word list, and the sentence shapes in `instructions/writing-style.md`. The rules themselves live in that file and stand on their own.
 
-```bash
-mkdir -p ~/code/my-project/.claude
-cp harness/claude-code/settings.json ~/code/my-project/.claude/settings.json
-```
-
-Rules live in `instructions/writing-style.md`. Add a banned pattern there and in `scripts/style-check.sh` together.
+Deliberately not a hook: a hook works in Claude Code and not in Opencode, which needs a plugin for any event, so enforcement would exist on one machine and not the other. See the enforcement note in `notes/philosophy.md`.
 
 ## Layout
 

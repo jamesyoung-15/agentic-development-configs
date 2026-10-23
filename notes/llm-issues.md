@@ -146,6 +146,6 @@ Ordered by what the table above says is weakest.
 1. Run `checkpoint` on a real long-running work project. The test is whether a fresh session can continue from `STATE.md` alone.
 2. Start the work wiki. Three pages, hand-written, before automating anything.
 3. Run `whiteboard-defense` and `teach` against real work. Both untested. Record failures in `tests/README.md`.
-4. Length check in `style-check.sh`, if writing volume keeps leaking past the word and phrase rules.
+4. Wire up the prose linter, only if the instruction alone turns out not to hold. Claude Code hook plus an Opencode plugin in `~/.config/opencode/plugins/`, or it exists on one machine and not the other.
 5. `debug` skill, if shotgun patching keeps happening.
 6. Nothing else until an issue above goes from `partial` to needing it.

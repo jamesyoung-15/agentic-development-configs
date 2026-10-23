@@ -32,12 +32,20 @@ Instructions decay over a long context. The model follows them for twenty turns 
 
 Order of preference:
 
-1. A script that fails. `style-check.sh`.
+1. A script that fails.
 2. A hook that feeds the failure back. The agent fixes its own output before you ever see it.
 3. A checkpoint skill that reviews at the end. `review-pr`.
 4. An instruction in `AGENTS.md`. Weakest. Use for things that cannot be checked.
 
 Anything important enough to care about should climb as high up that list as it can go.
+
+Prose is the exception, deliberately. There is a linter in `scripts/`, but nothing is wired to it: no hook, and no instruction references it. Reasons, on 2026-10-21:
+
+- A hook is Claude Code only. Opencode needs a TypeScript plugin for any event, so enforcement would exist on one machine and not the other, which is worse than enforcement existing nowhere.
+- An instruction that claims something is checked, in a project where nothing checks it, is a lie the agent will act on.
+- A false positive costs more than a miss, since it makes the agent rewrite prose that was fine.
+
+Run `scripts/style-check.sh` by hand when it is wanted. Wire it up if the instruction alone turns out not to hold.
 
 ### Behavior rules need examples, not adjectives
 
