@@ -2,7 +2,7 @@
 
 # Documentation
 
-Follow `writing-style.md` for prose. This file covers structure.
+Follow `.agents/instructions/writing-style.md` for prose. This file covers structure.
 
 ## README
 

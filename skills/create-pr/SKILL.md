@@ -8,7 +8,7 @@ description: Open a pull request or merge request from the current branch. Use w
 ## Rules
 
 - Describe the diff, not the conversation. Re-read the changes before writing anything. What you remember doing and what is actually staged often differ.
-- Follow `writing-style.md`. No em dashes, no emoji, no filler.
+- Follow `.agents/instructions/writing-style.md` if installed. No em dashes, no emoji, no filler.
 - Do not credit the agent anywhere in the branch, commits, title, or body.
 - Never force-push, rebase, or amend without being asked.
 - Stop and ask before pushing if the branch is `main`, `master`, `develop`, or the repo default.
@@ -51,7 +51,7 @@ If the diff is large, read the stat first, then the files that carry the behavio
 
 ### 4. Write the description
 
-Use `templates/pr-body.md`. Fill `What` and `Why` always. Drop `Approach` and `Testing` if there is nothing real to put there, do not pad them.
+Use `.agents/templates/pr-body.md`. Fill `What` and `Why` always. Drop `Approach` and `Testing` if there is nothing real to put there, do not pad them.
 
 - `What`: one bullet per user-visible or API-visible change. Not one bullet per file.
 - `Why`: the problem being solved. If there is a ticket, the ticket is context, not the reason.

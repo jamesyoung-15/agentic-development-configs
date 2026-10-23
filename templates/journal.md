@@ -5,7 +5,7 @@ a wrong one. Correct it with a new line that says it was wrong.
 One line per event. If an entry needs a paragraph, it needs an ADR instead,
 and the line here should link to it.
 
-Triggers are in instructions/context.md. Do not judge importance, follow the
+Triggers are in .agents/instructions/context.md. Do not judge importance, follow the
 triggers.
 -->
 

@@ -94,5 +94,5 @@ Rules for the report:
 
 ## Related
 
-- Write ADRs at decision time (`templates/adr.md`) and most of these questions answer themselves later.
+- Write ADRs at decision time (`.agents/templates/adr.md`) and most of these questions answer themselves later.
 - Use `alignment` before the work, this skill after it.

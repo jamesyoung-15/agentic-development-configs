@@ -181,5 +181,17 @@ elif [ ! -L "$TARGET/CLAUDE.md" ]; then
   echo "warning     CLAUDE.md exists and is a real file, not linked to AGENTS.md" >&2
 fi
 
+# Installed files reference each other by their post-install path. Flag any
+# reference that points at something not installed here, rather than leaving a
+# dead path in a live file.
+dangling=$(grep -rhoE '\.agents/[a-zA-Z0-9_./-]+\.md' "$TARGET/.agents" 2>/dev/null \
+  | sort -u | while read -r ref; do [ -e "$TARGET/$ref" ] || echo "$ref"; done)
+if [ -n "$dangling" ]; then
+  echo
+  echo "warning     installed files reference these, which are not installed:" >&2
+  printf '            %s\n' $dangling >&2
+  echo "            install them too, or edit the references out of the copies." >&2
+fi
+
 echo
 echo "Installed at $STAMP. Now read each copy and adapt it to this project."

@@ -7,6 +7,8 @@ description: Install instruction fragments and skills from this repo into a targ
 
 Copies fragments into a project, stamps provenance, wires them into whatever harnesses that project uses, and tailors the copy to the project.
 
+Paths in this file are relative to the `agentic-development` checkout, not to the target project. Everywhere else, a path names where a file lands after install, under `.agents/`.
+
 ## Steps
 
 ### 1. Read the catalog

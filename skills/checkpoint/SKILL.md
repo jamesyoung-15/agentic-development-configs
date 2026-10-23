@@ -18,7 +18,7 @@ Converts what is only in the conversation into files that survive it. Run this b
 
 ### 1. Append to JOURNAL.md
 
-Walk the session and find every event matching a trigger from `instructions/context.md`:
+Walk the session and find every event matching a trigger from `.agents/instructions/context.md`:
 
 - a failure you then explained
 - a choice between approaches
@@ -26,13 +26,13 @@ Walk the session and find every event matching a trigger from `instructions/cont
 - an assumption invalidated
 - something ruled out
 
-One line each, `YYYY-MM-DD  tag  text`. Create the file from `templates/journal.md` if it does not exist.
+One line each, `YYYY-MM-DD  tag  text`. Create the file from `.agents/templates/journal.md` if it does not exist.
 
 Bias toward the `fail` lines. They are the ones that stop a dead end being walked a second time, and they are the first thing compaction throws away.
 
 ### 2. Rewrite STATE.md
 
-In full, from `templates/state.md`. Not a diff, not an append.
+In full, from `.agents/templates/state.md`. Not a diff, not an append.
 
 Check each section against reality rather than memory:
 
@@ -48,7 +48,7 @@ If `STATE.md` runs past a page, history has crept in. Move it to `JOURNAL.md` an
 
 List decisions made this session that are not written down anywhere. For each, one line: the decision, and whether it needs an ADR.
 
-A decision needs one when it was not forced, and when someone could reasonably ask later why it went that way. Write them with `templates/adr.md`. Ask before writing more than two, they are the user's words as much as yours.
+A decision needs one when it was not forced, and when someone could reasonably ask later why it went that way. Write them with `.agents/templates/adr.md`. Ask before writing more than two, they are the user's words as much as yours.
 
 ### 4. Check the plan landed
 

@@ -75,7 +75,7 @@ Fine, that is `vibe` mode. Say which one you are in and switch cleanly. Do not h
 
 ## Related
 
-- `instructions/modes.md`: `assist` mode is the always-on version of this, one line of reasoning per decision.
+- `.agents/instructions/modes.md`: `assist` mode is the always-on version of this, one line of reasoning per decision.
 - `whiteboard-defense`: the exam. This skill is the lesson. Teach first, drill later, and use the drill's gap list to pick the next lesson.
 
 ## Project overrides

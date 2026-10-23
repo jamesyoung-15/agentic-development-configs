@@ -26,7 +26,7 @@ Default. For work code and anything that outlives the week.
 For customer-facing work, or anything you will have to explain to another person.
 
 - Everything in `assist`, plus:
-- Write an ADR (`templates/adr.md`) for every decision that was not forced. Write it at the moment of the decision, not at the end.
+- Write an ADR (`.agents/templates/adr.md`) for every decision that was not forced. Write it at the moment of the decision, not at the end.
 - Run the `whiteboard-defense` skill before opening the PR. Do not open the PR while there are unresolved `fail` answers.
 
 ## Signals
