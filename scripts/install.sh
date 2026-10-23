@@ -280,6 +280,7 @@ wire_opencode() {
       printf '\n  ]\n}\n'
     } > "$f"
     echo "created     opencode.json, ${#eager_rels[@]} eager instructions"
+    opencode_reload_hint
     return 0
   fi
 
@@ -289,6 +290,7 @@ wire_opencode() {
     printf '              "%s"\n' "${eager_rels[@]}" >&2
     return 0
   }
+  # exit 3 from the helper means nothing changed, so no reload is needed.
   python3 - "$f" "${eager_rels[@]}" <<'PYEOF'
 import json, sys, pathlib
 path = pathlib.Path(sys.argv[1])
@@ -298,8 +300,17 @@ added = [x for x in sys.argv[2:] if x not in cur]
 doc["instructions"] = cur + added
 path.write_text(json.dumps(doc, indent=2) + "\n")
 print(f"opencode    merged {len(added)} new into opencode.json instructions")
+sys.exit(0 if added else 3)
 PYEOF
+  [ $? -eq 3 ] || opencode_reload_hint
 }
+
+# Opencode caches project config, so an already-open session will not see a new
+# or changed instructions array until it is told to re-read.
+opencode_reload_hint() {
+  echo "            run /reload in any open Opencode session on this project"
+}
+
 wire_opencode
 
 # CLAUDE.md -> AGENTS.md

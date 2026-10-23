@@ -41,12 +41,11 @@ Format: `YYYY-MM-DD  item  what happened`
 2026-10-23  install  macOS: fzf picker and skill symlinks work, --copy not needed.
 2026-10-23  opencode Eager fragments never loaded: Opencode does not expand @import.
                      install.sh now writes them to opencode.json instructions. See
-                     CHANGELOG 0.3.1. Not yet confirmed that the array actually loads.
+                     CHANGELOG 0.3.1.
+2026-10-23  opencode Confirmed loading on the Mac. An already-open session needs
+                     /reload first, since Opencode caches project config. Fresh
+                     sessions pick it up on their own.
 ```
-
-Open check: start Opencode in a project installed since 0.3.1 and ask the agent to
-quote a rule that exists only in an eager fragment, such as a banned sentence shape
-from `writing-style.md`. If it cannot, the instructions array is not loading.
 
 Lesson: everything here was written and tested on Linux, and the work machine
 is an M4 Mac. Assume any script is Linux-only until it has been run there.

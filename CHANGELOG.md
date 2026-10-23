@@ -6,6 +6,16 @@ Bump `VERSION` when something installable changes. Changes to `notes/`, `tests/`
 
 ## Unreleased
 
+## 0.3.2 - 2026-10-23
+
+### Added
+
+- `install.sh` prints a `/reload` hint after it writes or changes `opencode.json`. Opencode caches project config, so an already-open session keeps using the old one. Only printed when something actually changed.
+
+### Notes
+
+- The 0.3.1 fix is confirmed working on macOS against opencode v2.1.4. Eager fragments load from the `instructions` array.
+
 ## 0.3.1 - 2026-10-23
 
 ### Fixed
