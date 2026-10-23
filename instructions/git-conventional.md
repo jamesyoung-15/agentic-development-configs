@@ -15,6 +15,8 @@
 - Subject in imperative mood, lowercase, no trailing period, under 72 characters.
 - Example: `feat: allow provided config object to extend other configs`
 - Body only for changes where the reason is not obvious from the diff. Explain why, not what.
+- At most 3 lines of body. If it needs more, the commit is too big, or the reasoning belongs in an ADR the body can link to.
+- No bullet lists of what changed. The diff already says that.
 - Breaking changes get `!` after the type and a `BREAKING CHANGE:` footer.
 
 ## Rules
