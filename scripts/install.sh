@@ -2,7 +2,10 @@
 # Install instruction fragments and skills into a target project.
 #
 # Usage:
-#   scripts/install.sh <target-dir> <item> [<item>...] [--copy]
+#   scripts/install.sh <target> <item>...     install these
+#   scripts/install.sh <target> --preset NAME install a named set, see presets/
+#   scripts/install.sh <target>               pick from a list (needs fzf)
+#   scripts/install.sh <target> --update      reinstall what the manifest lists
 #
 #   <item>  path relative to this repo, e.g.
 #             instructions/python.md
@@ -12,12 +15,16 @@
 #   --copy  copy skills into harness dirs instead of symlinking
 #           (use if a harness does not follow symlinked skill dirs)
 #
+# Every run records what the project has in .agents/manifest. Only the picker
+# needs fzf; presets and explicit lists have no dependencies.
+#
 # Layout created in the target:
 #   .agents/instructions/*.md     canonical copies
 #   .agents/skills/<name>/        canonical copies
 #   .claude/skills/<name>         link or copy
 #   .opencode/skill/<name>        link or copy
 #   .agents/templates/...         canonical copies
+#   .agents/manifest              what this project has installed
 #   AGENTS.md                     from templates/agents-md.md if missing
 #   CLAUDE.md                     symlink to AGENTS.md
 #
@@ -37,18 +44,90 @@ SHA="$(git -C "$REPO" rev-parse --short HEAD 2>/dev/null || echo nogit)"
 STAMP="$VERSION+$SHA"
 
 MODE=link
+PRESET=
+UPDATE=0
 args=()
-for a in "$@"; do
-  case "$a" in
-    --copy) MODE=copy ;;
-    *) args+=("$a") ;;
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --copy)     MODE=copy ;;
+    --update)   UPDATE=1 ;;
+    --preset)   [ $# -ge 2 ] || { echo "--preset needs a name" >&2; exit 1; }
+                PRESET=$2; shift ;;
+    --preset=*) PRESET=${1#*=} ;;
+    *)          args+=("$1") ;;
   esac
+  shift
 done
 
-[ ${#args[@]} -ge 2 ] || { sed -n '2,25p' "$0" | sed 's/^# \?//'; exit 1; }
+[ ${#args[@]} -ge 1 ] || { sed -n '2,32p' "$0" | sed 's/^# \?//'; exit 1; }
 
 TARGET="$(cd "${args[0]}" 2>/dev/null && pwd)" || { echo "no such directory: ${args[0]}" >&2; exit 1; }
-items=("${args[@]:1}")
+items=(${args[@]+"${args[@]:1}"})
+MANIFEST="$TARGET/.agents/manifest"
+
+# One repo-relative path per line, # for comments. Same shape as a preset file.
+read_list() { # file -> appends to items
+  local l
+  while IFS= read -r l || [ -n "$l" ]; do
+    case "$l" in ''|'#'*) ;; *) items+=("$l") ;; esac
+  done < "$1"
+}
+
+presets() { ls "$REPO/presets/" 2>/dev/null | sed 's/\.txt$//' | tr '\n' ' '; }
+
+no_picker_help() {
+  cat >&2 <<HELP
+no picker available (fzf not installed)
+
+  install.sh <target> --preset <name>     $(presets)
+  install.sh <target> <item>...           see catalog.md
+  install.sh <target> --update            reinstall what the manifest lists
+HELP
+}
+
+# "path  [installed]  description", so the picker needs no preview subprocess.
+list_installable() {
+  local f name desc mark
+  for f in "$REPO"/instructions/*.md; do
+    name="instructions/$(basename "$f")"
+    desc=$(sed -n '1s/.*when: *\(.*[^ ]\) *-->/\1/p' "$f")
+    printf '%s\t%s\n' "$name" "$desc"
+  done
+  for f in "$REPO"/skills/*/; do
+    name="skills/$(basename "$f")"
+    desc=$(sed -n 's/^description: *//p' "$f/SKILL.md" | head -1 | cut -c1-90)
+    printf '%s\t%s\n' "$name" "$desc"
+  done
+  for f in $(cd "$REPO" && find templates -name '*.md' ! -name 'agents-md.md' | sort); do
+    printf '%s\t%s\n' "$f" "template"
+  done
+}
+
+pick_items() {
+  local installed=""
+  [ -f "$MANIFEST" ] && installed=$(tr '\n' '|' < "$MANIFEST")
+  list_installable | while IFS=$'\t' read -r name desc; do
+    case "|$installed" in *"|$name|"*) mark="installed" ;; *) mark="" ;; esac
+    printf '%-34s %-10s %s\n' "$name" "$mark" "$desc"
+  done | fzf --multi --height 80% --reverse \
+             --header 'tab to select, enter to confirm, ctrl-c to abort' \
+      | awk '{print $1}'
+}
+
+if [ -n "$PRESET" ]; then
+  [ -f "$REPO/presets/$PRESET.txt" ] || {
+    echo "no such preset: $PRESET (have: $(presets))" >&2; exit 1; }
+  read_list "$REPO/presets/$PRESET.txt"
+elif [ "$UPDATE" -eq 1 ]; then
+  [ -f "$MANIFEST" ] || { echo "no manifest at $MANIFEST, nothing to update" >&2; exit 1; }
+  read_list "$MANIFEST"
+elif [ ${#items[@]} -eq 0 ]; then
+  # Check here, not inside pick_items: that runs in a process-substitution
+  # subshell, where exit would only leave the subshell.
+  command -v fzf >/dev/null 2>&1 || { no_picker_help; exit 1; }
+  while IFS= read -r l; do [ -n "$l" ] && items+=("$l"); done < <(pick_items)
+  [ ${#items[@]} -gt 0 ] || { echo "nothing selected" >&2; exit 0; }
+fi
 
 mkdir -p "$TARGET/.agents/instructions" "$TARGET/.agents/skills"
 
@@ -180,6 +259,13 @@ if [ ! -e "$TARGET/CLAUDE.md" ]; then
 elif [ ! -L "$TARGET/CLAUDE.md" ]; then
   echo "warning     CLAUDE.md exists and is a real file, not linked to AGENTS.md" >&2
 fi
+
+# Record what this project has, so later runs need no arguments and sync can
+# tell an item that was never installed from one that was deleted.
+{ [ -f "$MANIFEST" ] && cat "$MANIFEST"; printf '%s\n' "${items[@]}"; } \
+  | sed '/^[[:space:]]*$/d' | sort -u > "$MANIFEST.tmp"
+mv "$MANIFEST.tmp" "$MANIFEST"
+echo "manifest    $(grep -c . "$MANIFEST") items in .agents/manifest"
 
 # Installed files reference each other by their post-install path. Flag any
 # reference that points at something not installed here, rather than leaving a

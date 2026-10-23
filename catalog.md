@@ -18,6 +18,17 @@ Drop-in markdown fragments. Installed to `.agents/instructions/` and wired into 
 | `modes.md` | eager | You want vibe / assist / defend to be explicit |
 | `context.md` | eager | Any project that outlives one session. Sub-agent and journal rules |
 
+## Presets
+
+Named sets, one file per preset in `presets/`. One repo-relative path per line, `#` for comments. Add your own by dropping a file in.
+
+| Preset | Contains |
+|---|---|
+| `python` | Python standards, plain git, writing style, context, create-pr, review-pr, checkpoint, and the ADR, PR, state and journal templates |
+| `long-running` | Context rules, checkpoint, and the ADR, state and journal templates. Layer on top of a language preset |
+
+Each preset is self-contained: everything a skill in it references is also in it, so installing one never leaves a dangling reference.
+
 ## Skills
 
 Installed to `.agents/skills/<name>/`, linked into `.claude/skills/` and `.opencode/skill/`.

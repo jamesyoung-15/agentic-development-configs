@@ -1,0 +1,7 @@
+# Context management only. Add on top of a language preset, or use alone on a
+# project where the work spans many sessions.
+instructions/context.md
+skills/checkpoint
+templates/adr.md
+templates/state.md
+templates/journal.md

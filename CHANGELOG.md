@@ -6,6 +6,26 @@ Bump `VERSION` when something installable changes. Changes to `notes/`, `tests/`
 
 ## Unreleased
 
+## 0.3.0 - 2026-10-23
+
+### Added
+
+- Presets. `install.sh <target> --preset python` installs a named set from `presets/`, one repo-relative path per line. Two to start, `python` and `long-running`, each self-contained so installing one leaves no dangling references.
+- A picker. `install.sh <target>` with no items lists everything installable with its `when:` text, multi-select, already-installed items marked. Needs `fzf`; presets and explicit lists do not, so a machine that cannot install tools is unaffected. Without `fzf` it prints the preset list rather than erroring.
+- `.agents/manifest` in the target records what is installed. `install.sh <target> --update` reinstalls the lot with no arguments, instead of retyping the original list.
+- `sync.sh` reports `DELETED` for a manifest entry that is no longer on disk, which the provenance scan cannot see.
+
+### Changed
+
+- The prose style hook is gone. Enforcement would have been Claude Code only, since Opencode needs a TypeScript plugin for any event. `scripts/style-check.sh` stays as a manual tool and nothing references it.
+- `style-check.sh` matches sentence shapes, not just words: contrastive parallelism, the build-up triad, a rhetorical question you then answer, "Not X. But Y.", and staccato triples. `instructions/writing-style.md` carries a bad and good pair for each.
+- Cross-references inside installable content name their post-install path, so `.agents/templates/adr.md` rather than `templates/adr.md`. Install warns when a reference points at something not installed.
+- Commit messages: lowercase subjects, body capped at 3 lines.
+
+### Removed
+
+- `profiles/toolset.md`, folded into `profiles/james.md`. Most of it duplicated what `create-pr` and the project config already encode.
+
 ## 0.2.0 - 2026-10-20
 
 Context management, and a fix to how instructions get wired into `AGENTS.md`.

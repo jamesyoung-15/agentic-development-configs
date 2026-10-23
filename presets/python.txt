@@ -1,0 +1,12 @@
+# Python project, anything that outlives a week.
+instructions/python.md
+instructions/git-plain.md
+instructions/writing-style.md
+instructions/context.md
+skills/create-pr
+skills/review-pr
+skills/checkpoint
+templates/adr.md
+templates/pr-body.md
+templates/state.md
+templates/journal.md

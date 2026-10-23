@@ -9,15 +9,28 @@ Note: Very high LLM usage (at least for v0.1.0), most of the files are generated
 ```bash
 git clone <this-repo> ~/dev/agentic-development
 cd ~/dev/agentic-development
-chmod +x scripts/*.sh harness/claude-code/hooks/*.sh
+chmod +x scripts/*.sh
 
-./scripts/install.sh ~/code/my-project \
-  instructions/python.md \
-  instructions/git-conventional.md \
-  instructions/writing-style.md \
-  skills/create-pr \
-  templates/adr.md
+./scripts/install.sh ~/code/my-project --preset python
 ```
+
+Three ways in, pick whichever suits:
+
+| Command | What |
+|---|---|
+| `install.sh <target> --preset python` | a named set from `presets/` |
+| `install.sh <target>` | pick from a list, needs `fzf` |
+| `install.sh <target> instructions/python.md skills/create-pr` | exactly these |
+
+Every run records what the project has in `.agents/manifest`, so later runs need no
+arguments:
+
+```bash
+./scripts/install.sh ~/code/my-project --update    # reinstall everything listed
+```
+
+Only the picker needs `fzf`. Presets and explicit lists have no dependencies, which is
+also the answer on a machine where installing tools needs approval.
 
 Then read each installed copy and edit it for that project. See `catalog.md` for what to install and when.
 

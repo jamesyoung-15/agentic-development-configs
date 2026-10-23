@@ -10,6 +10,7 @@
 #   LOCAL     this copy was edited, upstream unchanged. Nothing to do
 #   DIVERGED  both changed. Read the diff and merge by hand
 #   GONE      upstream file no longer exists
+#   DELETED   the manifest lists it but it is not in the project any more
 
 set -uo pipefail
 
@@ -81,8 +82,30 @@ while IFS= read -r f; do
   fi
 done < <(grep -rl 'from: agentic-development/' "$TARGET/.agents" 2>/dev/null | sort)
 
-printf '\n%d current, %d behind, %d local, %d diverged.\n' \
+# The scan above only sees files that exist. The manifest also records what was
+# installed, so it can catch an item that was deleted from the project.
+n_gone=0
+MANIFEST="$TARGET/.agents/manifest"
+if [ -f "$MANIFEST" ]; then
+  while IFS= read -r item; do
+    case "$item" in ''|'#'*) continue ;; esac
+    case "$item" in
+      skills/*)       expect=".agents/skills/${item#skills/}/SKILL.md" ;;
+      templates/*)    expect=".agents/templates/${item#templates/}" ;;
+      instructions/*) expect=".agents/instructions/${item#instructions/}" ;;
+      *)              expect=".agents/$item" ;;
+    esac
+    [ -e "$TARGET/$expect" ] || {
+      printf 'DELETED   %s (in manifest, not on disk)\n' "$item"
+      n_gone=$((n_gone+1))
+    }
+  done < "$MANIFEST"
+fi
+
+printf '\n%d current, %d behind, %d local, %d diverged' \
   "$n_current" "$n_behind" "$n_local" "$n_diverged"
+[ "$n_gone" -gt 0 ] && printf ', %d deleted' "$n_gone"
+printf '.\n'
 [ "$n_behind" -gt 0 ] && echo "BEHIND files can be reinstalled with scripts/install.sh."
 [ "$n_diverged" -gt 0 ] && echo "DIVERGED files need a hand merge. Run with --diff."
 exit 0

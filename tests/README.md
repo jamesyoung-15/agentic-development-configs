@@ -36,6 +36,28 @@ Manual. Each scenario: the setup, what to type, and what a pass looks like. Reco
 - Also check: exact error strings and job IDs should be copied, not paraphrased.
 - The real test: start a fresh session, read only `STATE.md` and the journal tail, and see whether you can continue without asking a question.
 
+## install: presets, picker, manifest
+
+```bash
+rm -rf /tmp/p && mkdir /tmp/p
+./scripts/install.sh /tmp/p --preset python
+grep -c . /tmp/p/.agents/manifest        # 11, matches presets/python.txt
+./scripts/sync.sh /tmp/p                 # all current, no dangling warning
+
+./scripts/install.sh /tmp/p skills/teach # merges into the manifest
+./scripts/install.sh /tmp/p --update     # reinstalls the lot, no arguments
+
+rm -rf /tmp/p/.agents/skills/teach
+./scripts/sync.sh /tmp/p                 # DELETED skills/teach
+```
+
+A preset must stay self-contained. After installing one, install must print no
+dangling-reference warning. If it does, the preset is missing something a skill in
+it references.
+
+Check the picker without fzf on PATH: it should print the preset list and exit 1,
+not fall through to "nothing selected".
+
 ## install (eager vs routed)
 
 ```bash
