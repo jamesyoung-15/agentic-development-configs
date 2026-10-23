@@ -73,11 +73,11 @@ Rule: a script is Linux-only until it has been run on the Mac. Constraints are l
 
 ### Tag what has been used, not what has been written
 
-v0.1.0 and v0.2.0 were both tagged the day they were written, before anything in them had been run on a real project. That is backwards for a repo whose whole content is untested prompts.
+v0.1.0 was tagged the day it was written, before anything in it had been run on a real project. That is backwards for a repo whose whole content is untested prompts.
 
 Going forward: a version gets tagged after it has survived real work, and the tag message says what it survived. The annotated tag is a good place to record known gaps, which is the one thing v0.1.0 did right.
 
-Nothing needs undoing. The two existing tags are honest about being untested.
+0.2.0 through 0.3.1 are in the changelog and deliberately untagged. Each was superseded the same day and never ran anywhere in anger, so tagging them now would be fiction. Gaps in the tag sequence are fine; the changelog explains them.
 
 ## The mode problem
 
