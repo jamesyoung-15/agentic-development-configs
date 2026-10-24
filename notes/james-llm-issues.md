@@ -4,8 +4,6 @@
 
 Human written, not for agents!
 
-Status values: `mitigated` (something enforces it), `partial` (helps, still leaks), `open` (no mitigation yet), `accepted` (decided not to fix).
-
 ## Background (Skip)
 
 <details>
@@ -26,45 +24,34 @@ These are issues I feel like are "built-in/inherent" to agents/models. I can wri
 
 #### Volume and narration
 
-`partial`
-
 My biggest fucking gripe with LLM. They love to produce walls of text in their responses, documentation, and whatever they fucking write. Not only is there a shit ton of words, these words often have very little substance in them (or can be written in like 20 words).
 
 Personally, I want to be able to skim the page in ten seconds and decide whether to read it. I prefer bullet points over paragraphs (I know ironic with this file). Commands I can copy. Detail behind a link or a collapsed section if I choose to dig.
 
 Docs that I and many others like: Stripe API, FastAPI, Django, MDN.
 
-- Mitigated by: `instructions/writing-style.md` (structural limits, rewrite pairs), `instructions/documentation.md` (README ordering).
-- Still leaks: length is not mechanically checked. Could add a words-per-section check to `style-check.sh`.
+- Relevant file(s): `instructions/writing-style.md` (structural limits, rewrite pairs), `instructions/documentation.md` (README ordering).
 
 #### Vocabulary and phrasing
-
-`mitigated`
 
 I hate LLMisms and just the vocabulary and prose it chooses. For example:
 
 - Words: load-bearing, seam, genuinely, honestly
 - "That's genuinely x". "Honestly, that's y"
 - Contrastive parallelism: "it's not x, it's y", "the real bottleneck: connections, not CPU". Just say the damn thing.
-- Em dashes and emoji everywhere (less of an issue nowadays).
-- Stroking my ego (I've fell for this many times). They love telling me how smart I am and I feel damn good when it does so. LLMs love my "genuinely impressive intuition"
+- Abuse of dashes and Em dashes
+- Random emojis (less of an issue nowadays).
+- Stroking my ego, it does feel really good when they tell me how "genuinely" smart my observation was
 
 This can vary between models but overall I'd say most models suffer these on a varying degree.
-
-- Mitigated by: `scripts/style-check.sh` plus the PostToolUse hook. The agent gets its own violations back and fixes them in the same turn, before I see the file.
-- Maintenance: add a pattern to the script and to `instructions/writing-style.md` together, or the agent learns nothing from being blocked.
 
 ### Code
 
 #### Code quality
 
-`accepted`
-
 Not a problem I face because I'm a junior, so not something I'm experienced enough to discern. For me, given a linter, tests, and basic standards, agents write better code than I do right now.
 
 #### Comment verbosity
-
-`accepted`
 
 Agents leave five lines of comments where the code is self-documenting. `AGENTS.md` saying "1 to 3 lines" gets ignored until I repeat it in the prompt.
 
@@ -74,12 +61,9 @@ The part that does matter is accuracy. A stale comment that contradicts the code
 
 ### Alignment
 
-`partial`
-
 Sometimes a prompt problem, sometimes the agent misreading the problem. Either way I'll give it a prompt and it'll eagerly implement something that I hate afterwards or just is flat out wrong. For the most part, switching between plan/write mode has caught a lot of this issue, but not all.
 
-- Mitigated by: `skills/alignment`. Restate in its own words, tag every assumption, at most three questions, then stop and wait. The stop is the whole mechanism.
-- Still leaks: the skill has to be invoked. Nothing detects that alignment was needed and skipped.
+- Relevant file(s): `skills/alignment`.
 
 ## Issues Caused by Me
 
@@ -87,38 +71,27 @@ These are definitely avoidable problems but requires me to put thought/effort in
 
 ### Mode switching
 
-`partial`
-
 Usually not an agent issue. I switch between wanting the agent to own something completely and wanting to understand every decision, and I do not always notice which one I am in. Drifting from the first into the second is how you ship something you cannot explain.
 
 Honestly a lot of times this is a mental battle. I need to force myself a lot of times to not take the easy route and hand everything off to an agent or at least take the time to try and understand what the agent produced.
 
-- Mitigated by: `instructions/modes.md` makes the choice explicit. `templates/adr.md` captures reasoning at decision time.
-- Still leaks: declaring the mode is manual.
+- Relevant file(s): `instructions/modes.md` makes the choice explicit. `templates/adr.md` captures reasoning at decision time.
 
 ### Whiteboard defense
-
-`partial`
 
 Mitchell Hashimoto's "whiteboard defense", quoted in full in `philosophy.md`. For customer-facing work or work that I care about, I need to be able to explain and defend anything I shipped, even without line-level familiarity.
 
 I've got a lot of PoC/experiments/utility tools that quite frankly speaking who gives a toss about, so not understanding it is fine.
 
-- Mitigated by: `skills/whiteboard-defense` drills me and produces a gap list. `skills/teach` closes the gaps.
-- Still leaks: needs testing against a real change to see whether it leaks answers into its own questions.
+- Relevant file(s): `skills/whiteboard-defense` drills me and produces a gap list. `skills/teach` closes the gaps.
 
 ### Learning
 
-`open`
-
 I am junior. There are times I want to be taught rather than handed a result, and the default agent behavior is to hand me the result.
 
-- Mitigated by: `skills/teach`, new and untested.
-- Watch for: the 800-word answer. The 150-word turn limit is the guard, and it is the rule most likely to be ignored.
+- Relevant file(s): `skills/teach`
 
 ### Context Management
-
-`partial`
 
 So for long-running sessions, I've found that the agent becomes dumber and dumber, particularly after compaction(s). This is expected and my quick solution was writing certain details to disk.
 
