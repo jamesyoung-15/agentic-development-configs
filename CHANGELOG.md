@@ -6,6 +6,26 @@ Bump `VERSION` when something installable changes. Changes to `notes/`, `tests/`
 
 ## Unreleased
 
+## 0.4.0 - 2026-10-23
+
+### Added
+
+- `steer` mode in `instructions/modes.md`: direction without implementation. Stops at approach-level forks, does not narrate, assumes the diff goes unread. Sits between `vibe` and `assist`.
+- Commit permission now follows the mode. `vibe` may commit, tag and push freely; `steer` asks unless told otherwise at declaration; `assist` and `defend` ask.
+- `scripts/link-worktree.sh` and `instructions/worktrees.md`. `git worktree add` carries tracked files only, so a gitignored `.agents` or `.claude` leaves a new worktree with no config and no warning. Works per item, so a project that tracks some of its config gets only the gaps filled, and re-running is safe.
+- `install.sh` installs `scripts/*` items to `.agents/bin/`, executable and unstamped, so a project carries its own helpers.
+
+### Fixed
+
+- `install.sh` aborted when `opencode.json` needed no change. The merge helper signalled that by exiting 3 and `set -e` took it as failure, so re-installs skipped the manifest write and the dangling-reference check and exited 3. Live since 0.3.2.
+- `sync.sh` reported every installed helper script as `DELETED`, having mapped `scripts/*` to `.agents/scripts/` rather than `.agents/bin/`.
+
+### Changed
+
+- Installed content no longer references this repo or its scripts. A project does not know it was bootstrapped from here, so naming `install.sh` or `sync.sh` in a fragment means nothing to an agent reading it in place.
+- The commit body rule points at an existing doc or asks, rather than assuming an ADR exists and is tracked.
+- `instructions/modes.md` uses one convention throughout: "you" is the agent, the human is "the user".
+
 ## 0.3.3 - 2026-10-23
 
 ### Changed
