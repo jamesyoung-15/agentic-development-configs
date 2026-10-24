@@ -7,13 +7,13 @@ Human written, not for agents!
 ## Background (Skip)
 
 <details>
-    <summary>TLDR - Started heavily integrating AI agents to workflow in mid-2026, hit many pain-points listed in this file. This repo aims to mitigate them.</summary>
+<summary>TLDR - Started heavily integrating AI agents to workflow in mid-2026, hit many pain-points listed in this file. This repo aims to mitigate them.</summary>
 
-    So I started using LLMs in 2025, but overall I didn't use it too much and mainly relied on web chat interface to copy and paste snippets or discuss ideas/plans. This was a terrible and inefficient experience, hence why I didn't bother too much with LLMs at the time.
+So I started using LLMs in 2025, but overall I didn't use it too much and mainly relied on web chat interface to copy and paste snippets or discuss ideas/plans. This was a terrible and inefficient experience, hence why I didn't bother too much with LLMs at the time.
 
-    At around mid-2026, I've decided to try and integrate LLM agents heavily into my workflow to speed up development. During this timespan, I've mainly used Opencode and Claude Code as my harness with either Anthropic models (work-provided) and dabbled with couple other models (Deepseek, Qwen, GPT 5-6 Luna, etc). I felt (key word being felt) a great deal of productivity boost, but this likely came at the cost of technical debt + cognitive debt as many times I would completely offload my task and understanding to the agent in an effort to close out tasks faster.
+At around mid-2026, I've decided to try and integrate LLM agents heavily into my workflow to speed up development. During this timespan, I've mainly used Opencode and Claude Code as my harness with either Anthropic models (work-provided) and dabbled with couple other models (Deepseek, Qwen, GPT 5-6 Luna, etc). I felt (key word being felt) a great deal of productivity boost, but this likely came at the cost of technical debt + cognitive debt as many times I would completely offload my task and understanding to the agent in an effort to close out tasks faster.
 
-    During this period, I've hit a lot of issues and annoyances with "agentic development", tracked with this file. Whether these will be solved with future models/harness updates remains to be seen, so rather than sit and wait I've decided to try and experiment with different skills, instructions, and what not in this repo to see if I can at the very least mitigate these issues.
+During this period, I've hit a lot of issues and annoyances with "agentic development", tracked with this file. Whether these will be solved with future models/harness updates remains to be seen, so rather than sit and wait I've decided to try and experiment with different skills, instructions, and what not in this repo to see if I can at the very least mitigate these issues.
 </details>
 
 ## Issues I Attribute to Agents/LLM Models
@@ -33,8 +33,6 @@ They love to produce walls of text in their responses, documentation, and whatev
 Personally, I want to be able to skim the page in ten seconds and decide whether to read it. I prefer bullet points over paragraphs (I know ironic with this file). Commands I can copy. Detail behind a link or a collapsed section if I choose to dig.
 
 Docs that I and many others like: Stripe API, FastAPI, Django, MDN.
-
-- Relevant file(s): `instructions/writing-style.md` (structural limits, rewrite pairs), `instructions/documentation.md` (README ordering).
 
 #### Vocabulary
 
@@ -79,7 +77,7 @@ Agents leave five lines of comments where the code is self-documenting. `AGENTS.
 
 Decided not to chase this. Over-commenting forces me to read the code and edit by hand, which I want to be doing anyway. For agent-driven projects more comments do not hurt.
 
-The part that does matter is accuracy. A stale comment that contradicts the code is worse than no comment. `instructions/python.md` says to delete rather than let one drift.
+The part that does matter is accuracy. A stale comment that contradicts the code is worse than no comment. `instructions/python.md` says to delete rather than let one drift. This has caused issues in my sessions before because 1 agent's assumption that is written as a code led to another agent believing some restriction that wasn't actually an issue.
 
 ### Alignment
 
@@ -93,23 +91,19 @@ These are definitely avoidable problems but requires me to put thought/effort in
 
 ### Mode switching
 
-Usually not an agent issue. I switch between wanting the agent to own something completely and wanting to understand every decision, and I do not always notice which one I am in. Drifting from the first into the second is how you ship something you cannot explain.
-
-Honestly a lot of times this is a mental battle. I need to force myself a lot of times to not take the easy route and hand everything off to an agent or at least take the time to try and understand what the agent produced.
+I switch between wanting the agent to take the wheel and then I want to have more control. Adding explicit modes makes it easier without re-typing bunch of prompts to get the behavior I want.
 
 - Relevant file(s): `instructions/modes.md` makes the choice explicit. `templates/adr.md` captures reasoning at decision time.
 
 ### Whiteboard defense
 
-Mitchell Hashimoto's "whiteboard defense", quoted in full in `philosophy.md`. For customer-facing work or work that I care about, I need to be able to explain and defend anything I shipped, even without line-level familiarity.
-
-I've got a lot of PoC/experiments/utility tools that quite frankly speaking who gives a toss about, so not understanding it is fine.
+Mitchell Hashimoto's "whiteboard defense", quoted in full in `philosophy.md`. For work that I care or should care about, I need to be able to explain and defend anything I shipped, even without line-level familiarity.
 
 - Relevant file(s): `skills/whiteboard-defense` drills me and produces a gap list. `skills/teach` closes the gaps.
 
 ### Learning
 
-I am junior. There are times I want to be taught rather than handed a result, and the default agent behavior is to hand me the result.
+I am junior. There are times I want to be taught rather than handed a result, and the default agent behavior is to hand me the result. This requires effort on my end to not be lazy.
 
 - Relevant file(s): `skills/teach`
 
