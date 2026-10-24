@@ -35,6 +35,25 @@ Specific patterns that make text harder to read:
 - The sentence shapes matter more than the vocabulary. Those are the structures that read as machine-written: contrastive parallelism, the build-up triad, a rhetorical question you then answer, "Not X. But Y.", staccato triples.
 - Maintenance: if a pattern is added to the script, add it to `instructions/writing-style.md` as a bad and good pair too. The instruction is what the agent reads.
 
+### Undefined jargon
+
+`partial`
+
+On 2026-10-23 I asked what an ADR was. The agent had put `templates/adr.md` in the
+repo and referenced it from `modes.md`, `checkpoint`, `whiteboard-defense`, and both
+git fragments, without once expanding the acronym or saying what the thing was for.
+Five files assuming a term I did not know.
+
+The failure mode is specific: in conversation the agent explains itself, but a
+template or instruction gets opened cold, months later, with none of that context.
+Anything written for later reading has to stand alone.
+
+- Mitigated by: a rule in `instructions/writing-style.md` to define an acronym or
+  term of art on first use, especially in files someone will read cold. The ADR
+  template now explains what an ADR is and when to bother writing one.
+- Still leaks: nothing checks it. Worth a scan of the other fragments for terms I
+  have not actually confirmed I know.
+
 ## Code
 
 ### Code quality
