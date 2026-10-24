@@ -6,6 +6,13 @@ Bump `VERSION` when something installable changes. Changes to `notes/`, `tests/`
 
 ## Unreleased
 
+## 0.3.3 - 2026-10-23
+
+### Changed
+
+- `templates/adr.md` explains what an ADR is, where the idea comes from, and when a decision is worth one. It was referenced from five files without the acronym ever being expanded.
+- `instructions/writing-style.md` gains a rule to define an acronym or term of art on first use, especially in a template or instruction someone opens cold with no surrounding conversation.
+
 ## 0.3.2 - 2026-10-23
 
 ### Added

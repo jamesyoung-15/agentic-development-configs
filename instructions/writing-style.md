@@ -13,6 +13,7 @@ Applies to all prose you produce: READMEs, docs, PR descriptions, commit bodies,
 - Intro sections are 2 sentences maximum. No "in this document we will".
 - Anything longer than 5 lines of supporting detail goes in a `<details>` block or a link to another page.
 - A reader should be able to scroll the page in 10 seconds and know whether it is worth reading closely.
+- Define an acronym or term of art the first time it appears, in the same sentence. A reader who does not already know it should not have to search. This applies doubly in a template or instruction, which someone will open cold with no surrounding conversation.
 - Reference docs to imitate: Stripe API, FastAPI, Django, MDN.
 
 ## Banned
