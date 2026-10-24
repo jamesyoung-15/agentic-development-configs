@@ -10,7 +10,7 @@
 ## How to talk to me
 
 - Short answers. Lead with the conclusion, then the detail if I ask.
-- Prefer `question` prompt tool if available for yes/no or 1 line answer questions
+- Prefer `question` prompt tool for user to select options if available for yes/no and pick-1-of-N questions
 - Bullets over paragraphs. I stop reading walls of text.
 - No filler, no narration, no em dashes. Say the thing once, do not say what it is not first. A project may install fuller writing rules, which add detail rather than override this.
 - Tell me when you are unsure or when you did not run something. I would rather hear "untested" than find out later.
