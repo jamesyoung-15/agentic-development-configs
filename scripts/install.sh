@@ -24,6 +24,7 @@
 #   .claude/skills/<name>         link or copy
 #   .opencode/skill/<name>        link or copy
 #   .agents/templates/...         canonical copies
+#   .agents/bin/...               helper scripts, executable
 #   .agents/manifest              what this project has installed
 #   opencode.json                 instructions array, eager fragments only
 #   AGENTS.md                     from templates/agents-md.md if missing
@@ -207,6 +208,8 @@ for item in "${items[@]}"; do
     case "$item" in
       templates/*) dst="$TARGET/.agents/templates/${item#templates/}"
                    mkdir -p "$(dirname "$dst")" ;;
+      scripts/*)   dst="$TARGET/.agents/bin/${item#scripts/}"
+                   mkdir -p "$(dirname "$dst")" ;;
       *)           dst="$TARGET/.agents/instructions/$base"
                    # "<!-- load: eager|routed | when: ... -->" on the first line
                    d=$(sed -n '1s/^<!-- load: *\([a-z]*\) *| *when: *\(.*[^ ]\) *-->$/\1\t\2/p' "$src")
@@ -214,7 +217,10 @@ for item in "${items[@]}"; do
                    [ -n "$d" ] || { load=routed; when="(set a load directive in $item)"; }
                    installed_instructions+=("$load"$'\t'".agents/instructions/$base"$'\t'"$when") ;;
     esac
-    stamp_file "$src" "$dst" "$item"
+    case "$item" in
+      scripts/*) cp "$src" "$dst"; chmod +x "$dst" ;;
+      *)         stamp_file "$src" "$dst" "$item" ;;
+    esac
     printf 'file        %s%s\n' "${dst#"$TARGET"/}" "${load:+ [$load]}"
     unset load when
   fi

@@ -93,6 +93,7 @@ if [ -f "$MANIFEST" ]; then
       skills/*)       expect=".agents/skills/${item#skills/}/SKILL.md" ;;
       templates/*)    expect=".agents/templates/${item#templates/}" ;;
       instructions/*) expect=".agents/instructions/${item#instructions/}" ;;
+      scripts/*)      expect=".agents/bin/${item#scripts/}" ;;
       *)              expect=".agents/$item" ;;
     esac
     [ -e "$TARGET/$expect" ] || {

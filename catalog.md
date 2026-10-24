@@ -17,6 +17,7 @@ Drop-in markdown fragments. Installed to `.agents/instructions/` and wired into 
 | `documentation.md` | routed | The project has a README or docs that are maintained |
 | `modes.md` | eager | You want vibe / assist / defend to be explicit |
 | `context.md` | eager | Any project that outlives one session. Sub-agent and journal rules |
+| `worktrees.md` | routed | The project uses git worktrees and gitignores any of its agent config |
 
 ## Presets
 
@@ -44,6 +45,14 @@ Installed to `.agents/skills/<name>/`, linked into `.claude/skills/` and `.openc
 | `install` | Bringing any of this into a project and adapting it |
 
 `alignment` runs before the work, `teach` during, `whiteboard-defense` after. The drill produces a gap list, `teach` closes the gaps. `checkpoint` runs across all of them, whenever the session is about to lose state.
+
+## Helper scripts
+
+Installed to `.agents/bin/`, executable. Not stamped with provenance, since they are code rather than content.
+
+| Script | Use when |
+|---|---|
+| `link-worktree.sh` | A new worktree is missing the agent config. Pairs with `worktrees.md` |
 
 ## Templates
 
