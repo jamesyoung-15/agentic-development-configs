@@ -291,7 +291,9 @@ wire_opencode() {
     return 0
   }
   # exit 3 from the helper means nothing changed, so no reload is needed.
-  python3 - "$f" "${eager_rels[@]}" <<'PYEOF'
+  # Capture it rather than letting set -e abort the whole install.
+  local rc=0
+  python3 - "$f" "${eager_rels[@]}" <<'PYEOF' || rc=$?
 import json, sys, pathlib
 path = pathlib.Path(sys.argv[1])
 doc = json.loads(path.read_text())
@@ -302,7 +304,12 @@ path.write_text(json.dumps(doc, indent=2) + "\n")
 print(f"opencode    merged {len(added)} new into opencode.json instructions")
 sys.exit(0 if added else 3)
 PYEOF
-  [ $? -eq 3 ] || opencode_reload_hint
+  case $rc in
+    0) opencode_reload_hint ;;
+    3) ;;
+    *) echo "warning     could not merge opencode.json (exit $rc), add by hand:" >&2
+       printf '              "%s"\n' "${eager_rels[@]}" >&2 ;;
+  esac
 }
 
 # Opencode caches project config, so an already-open session will not see a new
