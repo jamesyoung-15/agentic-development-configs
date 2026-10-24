@@ -14,7 +14,7 @@
 - Imperative mood, lower-case, no trailing period, under 72 characters.
 - Example: `add user authentication middleware`
 - Body only for changes where the reason is not obvious from the diff. Explain why, not what.
-- At most 3 lines of body. If it needs more, the commit is too big, should reference an existing doc (eg. markdown file) or ask the user for permission.
+- At most 3 lines of body. If it needs more, the commit is too big. Either reference an existing doc/file or ask user for permission via prompt tool.
 
 ## Rules
 
