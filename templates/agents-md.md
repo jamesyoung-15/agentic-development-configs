@@ -3,8 +3,8 @@ AGENTS.md is in context on every turn of every session. Keep it under 100
 lines. Anything that matters on only some tasks belongs in the routing table
 under "Where to look", not in the body.
 
-The two install: markers are maintained by install.sh in the agentic-development
-repo. Leave them.
+The two install: markers are maintained by the tool that installs fragments into
+this project. Leave them in place, even when a section is empty.
 Eager fragments become @imports and load every session. Routed fragments
 become table rows the agent reads only when the task matches.
 

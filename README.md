@@ -112,6 +112,7 @@ Pass `--copy` to `install.sh` if a harness does not follow symlinked skill direc
 
 - Where a fragment needs changing for a project, make that obvious. Skills end with `## Project overrides`, templates use `{{PLACEHOLDER}}`, guessed lines are marked `{{?}}`. A fragment that needs silent editing is a bug.
 - No harness paths outside `harness/`.
+- Installable content must not reference this repo or its scripts. Most projects never know they were bootstrapped from here, so `install.sh`, `sync.sh`, and the repo name mean nothing to an agent reading a fragment in place. State the rule, not the tool that applied it.
 - Inside installable content, write a path as it exists after install: `.agents/instructions/foo.md`, `.agents/templates/adr.md`. The `install` skill is the exception, it runs from this repo and uses repo-relative paths. Profiles install into a harness global config and must contain no paths at all.
 - Every skill ends with a `## Project overrides` section for the installed copy to fill.
 - Nothing leaves `catalog.md`'s "Not built" table until a real task needs it.
