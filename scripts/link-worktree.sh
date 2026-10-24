@@ -20,6 +20,8 @@ set -uo pipefail
 # Finer-grained than the top-level dirs on purpose: a project can track
 # .claude/settings.json while ignoring .claude/skills, and the skills are the
 # part that breaks silently.
+# STATE.md and JOURNAL.md are deliberately absent: they are per-working-tree.
+# Sharing state across two threads of work loses one of them on every rewrite.
 ITEMS=(.agents AGENTS.md CLAUDE.md opencode.json
        .claude/skills .claude/settings.json .opencode/skill)
 

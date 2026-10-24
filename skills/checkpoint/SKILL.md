@@ -7,6 +7,8 @@ description: Write the session's durable state to disk so a fresh session can pi
 
 Converts what is only in the conversation into files that survive it. Run this before a third compaction, not after.
 
+`STATE.md` and `JOURNAL.md` live at the repo root, one pair per working tree. A worktree keeps its own: state describes one thread of work, so sharing it across two is meaningless.
+
 ## Hard rules
 
 1. **Do not summarize the conversation.** A transcript summary is what compaction already produces and it is the wrong artifact. Write state and events, not narrative.
