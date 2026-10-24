@@ -22,9 +22,13 @@ These are issues I feel like are "built-in/inherent" to agents/models. I can wri
 
 ### LLM Writing
 
+My biggest fucking gripe with LLM. I can't stand the way it talks or creates technical writings.
+
+TLDR: Low-density writing, patterns like negative parallelism that makes reading for a human harder
+
 #### Volume and narration
 
-My biggest fucking gripe with LLM. They love to produce walls of text in their responses, documentation, and whatever they fucking write. Not only is there a shit ton of words, these words often have very little substance in them (or can be written in like 20 words).
+They love to produce walls of text in their responses, documentation, and whatever they fucking write. Not only is there a shit ton of words, these words often have very little substance in them (or can be written in like 20 words).
 
 Personally, I want to be able to skim the page in ten seconds and decide whether to read it. I prefer bullet points over paragraphs (I know ironic with this file). Commands I can copy. Detail behind a link or a collapsed section if I choose to dig.
 
@@ -32,18 +36,36 @@ Docs that I and many others like: Stripe API, FastAPI, Django, MDN.
 
 - Relevant file(s): `instructions/writing-style.md` (structural limits, rewrite pairs), `instructions/documentation.md` (README ordering).
 
-#### Vocabulary and phrasing
+#### Vocabulary
 
-I hate LLMisms and just the vocabulary and prose it chooses. For example:
+Words like:
 
-- Words: load-bearing, seam, genuinely, honestly
-- "That's genuinely x". "Honestly, that's y"
-- Contrastive parallelism: "it's not x, it's y", "the real bottleneck: connections, not CPU". Just say the damn thing.
-- Abuse of dashes and Em dashes
-- Random emojis (less of an issue nowadays).
-- Stroking my ego, it does feel really good when they tell me how "genuinely" smart my observation was
+- load-bearing
+- seam
+- genuinely
+- honestly
+- smoking-gun
 
-This can vary between models but overall I'd say most models suffer these on a varying degree.
+all are well-documented. Whether it's because of the way LLMs use them or because they're associated with LLMs now, I have grown to hate it over time.
+
+#### Writing Patterns
+
+Also well-documented, there is a lot of "LLM-isms" and they suck. On it's own most of these are fine, but each issue compounds to make a document super verbose/lengthy with low density.
+
+Examples:
+
+
+| LLM-ism | Example | Why I Hate It |
+| ---     | ---     |  ---          |
+| Negative parallelism (it's not X, it's Y. it's Y, not X) | The real bottleneck: connections, not CPU | I see this all the time and most of the time they can just say the damn thing directly |
+| And the X? Y. | And the result? 10% faster performance | Sensationalized writing |
+| Punchy takeaways | here's the rub. the final takeaway | Sensationalized writing |
+| No X. No Y. Just Z. | No packages, no dependencies, just standard library. | Sensationalized writing |
+| Excessive repetition | The [...] are real. The [...] are real. | Saw this on a HackerNews article, hate it |
+| Ego-stroking/Sycophancy | That's genuinely impressive | Patronizing as shit |
+| Emojis in docs | Rocket-ship | I don't need a fire emoji or rocket-ship for a shitty doc, although I don't see it much past 2025 |
+
+This can vary between models but overall I'd say most models suffer these on a varying degree. I haven't found any prompt/instruction to fix this yet.
 
 ### Code
 
