@@ -2,7 +2,9 @@
 ADR: Architecture Decision Record. One short file recording a decision and why
 it was made. The idea is from a Michael Nygard post, around 2011.
 
-Save as docs/adr/NNNN-short-title.md, numbered in order.
+Where these live is a project decision. docs/adr/ when the project publishes its
+decisions, somewhere untracked when agent-drafted files should not land in
+published docs. Numbered in order either way: NNNN-short-title.md.
 
 Write it when the decision is made, not at the end of the project. The reasoning
 is in your head and in the agent's context at that moment and nowhere else. Later,

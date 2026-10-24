@@ -19,7 +19,7 @@ something not in the code), `wrong` (an assumption was invalid).
 ```
 2026-10-20  found  Inventory plugin caches for 15 min, explains the stale host list
 2026-10-20  fail   Raising forks to 50 changed nothing, bottleneck is the plugin not parallelism
-2026-10-20  why    Pinned the collection instead of patching upstream, see docs/adr/0003
+2026-10-20  why    Pinned the collection instead of patching upstream, see adr 0003
 2026-10-21  wrong  The retry wrapper does not cover timeouts, only non-2xx
 ```
 

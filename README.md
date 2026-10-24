@@ -89,7 +89,7 @@ AGENTS.md            under 100 lines: what this is, commands, always-rules, rout
   Where to look      routed fragments and wiki pages, read on demand
 STATE.md             current state, rewritten each checkpoint
 JOURNAL.md           append-only events, where negative results live
-docs/adr/            decisions, written at decision time
+adr/                 decisions, written at decision time, location per project
 wiki/                things not derivable from any repo, each page dated
 ```
 
