@@ -6,6 +6,14 @@ Bump `VERSION` when something installable changes. Changes to `notes/`, `tests/`
 
 ## Unreleased
 
+## 0.4.1 - 2026-10-23
+
+### Changed
+
+- The ADR template no longer hardcodes `docs/adr/`. Where they live is a project decision: a published directory when the project shares its decisions, somewhere untracked when agent-drafted files should not land in public docs.
+- `skills/checkpoint` states that `STATE.md` and `JOURNAL.md` live at the repo root, one pair per working tree. A worktree keeps its own, since state describes a single thread of work.
+- A commit body over 3 lines should reference an existing file or ask, rather than assume an ADR exists and is tracked. Both git fragments now agree.
+
 ## 0.4.0 - 2026-10-23
 
 ### Added
